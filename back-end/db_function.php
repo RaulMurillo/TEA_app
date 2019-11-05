@@ -31,6 +31,51 @@ public function getTutorEmailPass($email,$password){
 	}
 }
 
+public function getTutorId($tutor){
+	$stmt =$this->conn->prepare("SELECT * FROM Tutor WHERE Id_Tutor =? ");
+	$stmt->bind_param("s",$tutor);
+
+	if($stmt->execute())
+	{
+		$user =$stmt->get_result()->fetch_assoc();
+		$stmt->close();
+		return $user;
+	}
+	else{
+		return NULL;
+	}
+}
+
+
+public function getNinopId($nino){
+	$stmt =$this->conn->prepare("SELECT * FROM Nino WHERE Id_Nino =? ");
+	$stmt->bind_param("s",$nino);
+
+	if($stmt->execute())
+	{
+		$user =$stmt->get_result()->fetch_assoc();
+		$stmt->close();
+		return $user;
+	}
+	else{
+		return NULL;
+	}
+}
+
+public function getTutoriaTutorNino($tutor,$nino){
+	$stmt =$this->conn->prepare("SELECT * FROM Tutoria WHERE Id_Tutor =? and Id_Nino=? ");
+	$stmt->bind_param("ss",$tutor, $nino);
+
+	if($stmt->execute())
+	{
+		$user =$stmt->get_result()->fetch_assoc();
+		$stmt->close();
+		return $user;
+	}
+	else{
+		return NULL;
+	}
+}
 
 
 public function hashSSHA($password)

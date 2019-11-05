@@ -6,20 +6,20 @@ if(  isset($_POST['nino'])&& isset($_POST['tutor']))
 {
 
 
-	$nino =$_POST['nino'];
-	$tutor =$_POST['tutor'];
-	$Usuarionino=$db->getninoporID($nino);
+	$nino =$_POST['Nino'];
+	$tutor =$_POST['Tutor'];
+	$Usuarionino=$db->getNinopId($nino);
 	if($Usuarionino!=false){
-		$Usuariotutor=$db->gettutorporID($tutor);
+		$Usuariotutor=$db->getTutorId($tutor);
 		if($Usuariotutor!=false){
-			if($Usuarionino[tutorprincipal]!=$tutor){
-				$tutoria=$db->gettutoriaportutorynino($tutor,$nino);
+			if($Usuarionino["TutorPrincipal"]!=$tutor){
+				$tutoria=$db->getTutoriaTutorNino($tutor,$nino);
 				if($tutoria!=false){
-					eliminartutoriaportutorynino($tutor,$nino);
-					$response["error_msg"]="separados correctamente";
+					delTutoriaTutorNino($tutor,$nino);
+					$response["error_msg"]="Separados correctamente";
 					echo json_encode($response);}
 				else{$response["error"]=TRUE;
-				$response["error_msg"]="el nino y el tutor no estan relacionados ";
+				$response["error_msg"]="El nino y el tutor no estan relacionados ";
 				echo json_encode($response);
 				}
 			else{
@@ -30,13 +30,13 @@ if(  isset($_POST['nino'])&& isset($_POST['tutor']))
 			}
 		else{
 		$response["error"]=TRUE;
-		$response["error_msg"]="el tutor no existe ";
+		$response["error_msg"]="El tutor no existe ";
 		echo json_encode($response);
 		}
 	}
 	else{
 	$response["error"]=TRUE;
-	$response["error_msg"]="el nino no existe ";
+	$response["error_msg"]="El nino no existe ";
 	echo json_encode($response);
 	}
 
