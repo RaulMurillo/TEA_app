@@ -12,7 +12,8 @@ class DBFunctions
     }
     public function __destruct()
     {}
-
+		
+	
     public function getTutorEmailPass($email, $password)
     {
         $stmt = $this->conn->prepare("SELECT * FROM Tutor WHERE Email =? ");
@@ -35,7 +36,7 @@ class DBFunctions
 
     public function getTutorById($tutorId)
     {
-        $stmt = $this->conn->prepare("SELECT * FROM Tutor WHERE Id_Tutor =? ");
+        $stmt = $this->conn->prepare("SELECT * FROM Tutor WHERE Idtutor =? ");
         $stmt->bind_param("s", $tutorId);
 
         if ($stmt->execute()) {
@@ -49,7 +50,7 @@ class DBFunctions
 
     public function getNinoById($ninoId)
     {
-        $stmt = $this->conn->prepare("SELECT * FROM Nino WHERE Id_Nino =? ");
+        $stmt = $this->conn->prepare("SELECT * FROM Nino WHERE IdNino =? ");
         $stmt->bind_param("s", $ninoId);
 
         if ($stmt->execute()) {
@@ -63,17 +64,27 @@ class DBFunctions
 
     public function getTutoriaTutorNino($tutorId, $ninoId)
     {
-        $stmt = $this->conn->prepare("SELECT * FROM Tutoria WHERE Id_Tutor =? and Id_Nino=? ");
+        $stmt = $this->conn->prepare("SELECT * FROM Tutoria WHERE Idtutor =? and IdNino=? ");
         $stmt->bind_param("ss", $tutorId, $ninoId);
 
         if ($stmt->execute()) {
-            $user = $stmt->get_result()->fetch_assoc();
+            $tutoria = $stmt->get_result()->fetch_assoc();
             $stmt->close();
-            return $user;
+            return $tutoria;
         } else {
             return NULL;
         }
-    }
+	}
+	public function delTutoria($tutorId, $ninoId)
+	{
+		$stmt = $this->conn->prepare("DELETE FROM Tutoria WHERE Idtutor =? and IdNino=?");
+		$stmt->bind_param('ss',$tutorId, $ninoId);
+		$result =$stmt->execute(); 
+		$stmt->close();
+		return $result;
+
+		
+	}
 
     private function hashSSHA($password)
     {
