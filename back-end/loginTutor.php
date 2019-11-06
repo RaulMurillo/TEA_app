@@ -16,12 +16,12 @@ if (isset($_POST['contrasena']) && isset($_POST['email'])) {
         $_SESSION['tutorId'] = $user['Id_tutor'];
         
         $response["error"] = FALSE;
-        $response["tutor"]["idTutor"] = $user["IdTutor"];
+        $response["tutor"]["idTutor"] = $user["Id_tutor"];
         $response["tutor"]["email"] = $user["Email"];
         $response["tutor"]["nombre"] = $user["Nombre"];
         $response["tutor"]["apellidos"] = $user["Apellidos"];
-        $response["tutor"]["fechaNacimiento"] = $user["FechaNacimiento"];
-        $response["tutor"]["tipoTutor"] = $user["TipoTutor"];
+        $response["tutor"]["fechaNacimiento"] = $user["Fecha_nacimiento"];
+        $response["tutor"]["tipoTutor"] = $user["Tipo_tutor"];
         echo json_encode($response);
        
     } else {
