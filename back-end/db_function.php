@@ -75,7 +75,7 @@ class DBFunctions
         }
     }
 
-    public function hashSSHA($password)
+    private function hashSSHA($password)
     {
         $salt = sha1(rand());
         $salt = substr($salt, 0, 10);
@@ -84,7 +84,7 @@ class DBFunctions
         return $hash;
     }
 
-    public function checkHashSSHA($salt, $password) // Shouldn't be private??
+    private function checkHashSSHA($salt, $password) 
     {
         $hash = base64_encode(sha1($password . $salt, TRUE) . $salt);
         return $hash;
