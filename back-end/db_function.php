@@ -23,7 +23,7 @@ class DBFunctions
             $stmt->close();
             $salt = $user['Salt'];
             $Contrasena = $user['Contrasena'];
-            $hash = $this->checkhashSSHA($salt, $password);
+            $hash = $this->checkHashSSHA($salt, $password);
             if ($Contrasena == $hash) {
                 return $user;
             }
@@ -33,10 +33,10 @@ class DBFunctions
         }
     }
 
-    public function getTutorById($tutor)
+    public function getTutorById($tutorId)
     {
         $stmt = $this->conn->prepare("SELECT * FROM Tutor WHERE Id_Tutor =? ");
-        $stmt->bind_param("s", $tutor);
+        $stmt->bind_param("s", $tutorId);
 
         if ($stmt->execute()) {
             $user = $stmt->get_result()->fetch_assoc();
@@ -47,10 +47,10 @@ class DBFunctions
         }
     }
 
-    public function getNinoById($nino)
+    public function getNinoById($ninoId)
     {
         $stmt = $this->conn->prepare("SELECT * FROM Nino WHERE Id_Nino =? ");
-        $stmt->bind_param("s", $nino);
+        $stmt->bind_param("s", $ninoId);
 
         if ($stmt->execute()) {
             $user = $stmt->get_result()->fetch_assoc();
@@ -61,10 +61,10 @@ class DBFunctions
         }
     }
 
-    public function getTutoriaTutorNino($tutor, $nino)
+    public function getTutoriaTutorNino($tutorId, $ninoId)
     {
         $stmt = $this->conn->prepare("SELECT * FROM Tutoria WHERE Id_Tutor =? and Id_Nino=? ");
-        $stmt->bind_param("ss", $tutor, $nino);
+        $stmt->bind_param("ss", $tutorId, $ninoId);
 
         if ($stmt->execute()) {
             $user = $stmt->get_result()->fetch_assoc();
@@ -84,7 +84,7 @@ class DBFunctions
         return $hash;
     }
 
-    public function checkHashSSHA($salt, $password)
+    public function checkHashSSHA($salt, $password) // Shouldn't be private??
     {
         $hash = base64_encode(sha1($password . $salt, TRUE) . $salt);
         return $hash;
