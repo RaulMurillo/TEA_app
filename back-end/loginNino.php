@@ -2,26 +2,34 @@
 require_once 'db_function.php';
 $db = new DBFunctions();
 $response = array("error" => false);
-//if (isset($_POST['user_pass']) && isset($_POST['email']) && isset($_POST['ninoId'])) {
-if (isset($_POST['contrasena']) && isset($_POST['email'])) {
+if (isset($_POST['ninoId']) && isset($_SESSION['tutorId'])) {
+    $tutorId = $_SESSION['tutorId'];
+    $ninoId = $_POST['ninoId'];
+    $relation = $db->getTutoriaTutorNino($tutorId, $ninoId);
+    if ($relation != null && $relation['Estado_solicitud'] == 'Aceptado') { //Aceptado?? BBDD type enum.
 
-    $email = $_POST['email'];
-    $pass = $_POST['contrasena'];
-    // TO-DO: Similar as following
-    /**
-     * $user = $db->getNinoEmailPass($email, $pass);
-     * if ($user != false) {   // Should it be !=null ??
-     *     $response["error"] = false; // This is default, maybe unnecessary
-     *     $response["user"]["Usuario"] = $user["Usuario"];
-     *     $response["user"]["email"] = $user["email"];
-     *     $response["user"]["telefono"] = $user["telefono"];
-     *     echo json_encode($response);
-     * } else {
-     *     $response["error"] = true;
-     *     $response["error_msg"] = "email o contrasena incorrectos";
-     *     echo json_encode($response);
-     * }
-     */
+        $user = $db->getNinoById($ninoId);
+        $_SESSION['ninoId'] = $ninoId;
+        /*
+        $response["error"] = false;
+        $response["nino"]["idNino"] = $user["Id_nino"];
+        $response["nino"]["idNino"] = $user["Id_nino"];
+        $response["nino"]["nick"] = $user["Nick"];
+        $response["nino"]["nombre"] = $user["Nombre"];
+        $response["nino"]["apellidos"] = $user["Apellido"];
+        $response["nino"]["fechaNacimiento"] = $user["Fecha_nacimiento"];
+        $response["nino"]["fechaNacimiento"] = $user["Fecha_nacimiento"];
+         */
+        //echo json_encode($response);
+        $response["error"] = false;
+        $response["nino"] = $user;
+        echo json_encode($response);
+
+    } else {
+        $response["error"] = true;
+        $response["error_msg"] = "email o contrasena incorrectos";
+        echo json_encode($response);
+    }
 } else {
     $response["error"] = true;
     $response["error_msg"] = "Son necesarios email y contrasena";
