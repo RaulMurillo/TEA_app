@@ -1,20 +1,20 @@
 <?php
 require_once 'db_function.php';
-$db = new db_functions();
+$db = new DBFunctions();
 $response =array ("error"=>FALSE);
-if(  isset($_POST['nino'])&& isset($_POST['tutor'])) 
+if(  isset($_POST['Nino'])&& isset($_POST['Tutor'])) 
 {
 
 
 	$nino =$_POST['Nino'];
 	$tutor =$_POST['Tutor'];
-	$Usuarionino=$db->getNinopId($nino);
-	if($Usuarionino!=false){
-		$Usuariotutor=$db->getTutorId($tutor);
-		if($Usuariotutor!=false){
-			if($Usuarionino["TutorPrincipal"]!=$tutor){
+	$user_nino=$db->getNinopId($nino);
+	if($user_nino!=FALSE){
+		$user_tutor=$db->getTutorId($tutor);
+		if($user_tutor!=FALSE){
+			if($user_nino["TutorPrincipal"]!=$tutor){
 				$tutoria=$db->getTutoriaTutorNino($tutor,$nino);
-				if($tutoria!=false){
+				if($tutoria!=FALSE){
 					delTutoriaTutorNino($tutor,$nino);
 					$response["error_msg"]="Separados correctamente";
 					echo json_encode($response);}
@@ -48,6 +48,7 @@ else
 $response["error"]=TRUE;
 $response["error_msg"]="falta algun parametro";
 echo json_encode($response);
+}
 }
 ?>
 
