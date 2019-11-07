@@ -2,14 +2,13 @@
 require_once 'db_function.php';
 $db = new DBFunctions();
 $response = array("error" => false);
-if (isset($_POST['ninoId']) && isset($_SESSION['tutorId'])) {
-    $tutorId = $_SESSION['tutorId'];
+if (isset($_POST['ninoId']) && isset($_POST['tutorId'])) {
+    $tutorId = $_POST['tutorId'];
     $ninoId = $_POST['ninoId'];
     $relation = $db->getTutoriaTutorNino($tutorId, $ninoId);
     if ($relation != null && $relation['Estado_solicitud'] == 'Aceptado') { //Aceptado?? BBDD type enum.
 
         $user = $db->getNinoById($ninoId);
-        $_SESSION['ninoId'] = $ninoId;
         /*
         $response["error"] = false;
         $response["nino"]["idNino"] = $user["Id_nino"];

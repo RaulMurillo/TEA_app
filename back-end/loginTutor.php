@@ -1,6 +1,5 @@
 <?php
 
-session_start();
 require_once 'db_function.php';
 
 $db = new DBFunctions();
@@ -12,8 +11,7 @@ if (isset($_POST['contrasena']) && isset($_POST['email'])) {
     $user = $db->getTutorEmailPass($email, $contra);
     if ($user != FALSE) {
         
-        $_SESSION['login'] = True;
-        $_SESSION['tutorId'] = $user['Id_tutor'];
+    
         
         $response["error"] = FALSE;
         $response["tutor"]["idTutor"] = $user["Id_tutor"];
