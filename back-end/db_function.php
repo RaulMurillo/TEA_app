@@ -12,8 +12,25 @@ class DBFunctions
     }
     public function __destruct()
     {}
-		
-	
+
+    public function insertTutor()
+    {
+        // prepare and bind
+        $stmt = $this->conn->prepare("INSERT INTO Tutor ()
+                VALUES(:first_name, :last_name, :email)");
+        // TO-DO: set parameters and execute
+        $stmt->bind_param(':first_name', $name);
+        $stmt->bind_param(':last_name', $surname);
+        $stmt->bind_param(':email', $email);
+        
+
+        if ($stmt->execute()) {
+
+        } else {
+            return null;
+        }
+    }
+
     public function getTutorEmailPass($email, $password)
     {
         $stmt = $this->conn->prepare("SELECT * FROM Tutor WHERE Email =? ");
@@ -30,7 +47,7 @@ class DBFunctions
             }
 
         } else {
-            return NULL;
+            return null;
         }
     }
 
@@ -44,7 +61,7 @@ class DBFunctions
             $stmt->close();
             return $user;
         } else {
-            return NULL;
+            return null;
         }
     }
 
@@ -58,7 +75,7 @@ class DBFunctions
             $stmt->close();
             return $user;
         } else {
-            return NULL;
+            return null;
         }
     }
 
@@ -72,33 +89,31 @@ class DBFunctions
             $stmt->close();
             return $tutoria;
         } else {
-            return NULL;
+            return null;
         }
-	}
-	public function delTutoria($tutorId, $ninoId)
-	{
-		$stmt = $this->conn->prepare("DELETE FROM Tutoria WHERE Idtutor =? and IdNino=?");
-		$stmt->bind_param('ss',$tutorId, $ninoId);
-		$result =$stmt->execute(); 
-		$stmt->close();
-		return $result;
+    }
+    public function delTutoria($tutorId, $ninoId)
+    {
+        $stmt = $this->conn->prepare("DELETE FROM Tutoria WHERE Idtutor =? and IdNino=?");
+        $stmt->bind_param('ss', $tutorId, $ninoId);
+        $result = $stmt->execute();
+        $stmt->close();
+        return $result;
 
-		
-	}
+    }
 
     private function hashSSHA($password)
     {
         $salt = sha1(rand());
         $salt = substr($salt, 0, 10);
-        $encrypted = base64_encode(sha1($password . $salt, TRUE) . $salt);
+        $encrypted = base64_encode(sha1($password . $salt, true) . $salt);
         $hash = array("salt" => $salt, "encrypted" => $encrypted);
         return $hash;
     }
 
-    private function checkHashSSHA($salt, $password) 
+    private function checkHashSSHA($salt, $password)
     {
-        $hash = base64_encode(sha1($password . $salt, TRUE) . $salt);
+        $hash = base64_encode(sha1($password . $salt, true) . $salt);
         return $hash;
     }
 }
-?>

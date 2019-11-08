@@ -37,7 +37,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             throw new Exception("Invalid email format");
         }
         // TO-DO: check if e-mail already exists
-
+        if (...) {
+            throw new Exception("This e-mail already exists");
+        }
     }
     //Validates password & confirm passwords.
     if (!empty($_POST["password"]) && ($_POST["password"] == $_POST["cpassword"])) {
@@ -58,7 +60,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         throw new Exception("Please enter password");
     }
     // TO-DO: Create DB entry.
-
+    $user = $db->insertTutor();
+    echo json_encode($user);
 }
 /*Each $_POST variable with be checked by the function*/
 function test_input($data)
