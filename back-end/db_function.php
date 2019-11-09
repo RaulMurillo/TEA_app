@@ -53,7 +53,7 @@ class DBFunctions
 
     public function getTutorById($tutorId)
     {
-        $stmt = $this->conn->prepare("SELECT * FROM Tutor WHERE Idtutor =? ");
+        $stmt = $this->conn->prepare("SELECT * FROM Tutor WHERE Id_tutor =? ");
         $stmt->bind_param("s", $tutorId);
 
         if ($stmt->execute()) {
@@ -67,7 +67,7 @@ class DBFunctions
 
     public function getNinoById($ninoId)
     {
-        $stmt = $this->conn->prepare("SELECT * FROM Nino WHERE IdNino =? ");
+        $stmt = $this->conn->prepare("SELECT * FROM Nino WHERE Id_Nino =? ");
         $stmt->bind_param("s", $ninoId);
 
         if ($stmt->execute()) {
@@ -81,7 +81,7 @@ class DBFunctions
 
     public function getTutoriaTutorNino($tutorId, $ninoId)
     {
-        $stmt = $this->conn->prepare("SELECT * FROM Tutoria WHERE Idtutor =? and IdNino=? ");
+        $stmt = $this->conn->prepare("SELECT * FROM Tutoria WHERE Id_tutor =? and Id_Nino=? ");
         $stmt->bind_param("ss", $tutorId, $ninoId);
 
         if ($stmt->execute()) {
@@ -94,12 +94,51 @@ class DBFunctions
     }
     public function delTutoria($tutorId, $ninoId)
     {
-        $stmt = $this->conn->prepare("DELETE FROM Tutoria WHERE Idtutor =? and IdNino=?");
+        $stmt = $this->conn->prepare("DELETE FROM Tutoria WHERE Id_tutor =? and Id_Nino=?");
         $stmt->bind_param('ss', $tutorId, $ninoId);
         $result = $stmt->execute();
         $stmt->close();
         return $result;
 
+    }
+
+    public function existeNick($nick){
+        $stmt =$this->conn->prepare("SELECT * FROM Nino WHERE nick =?");
+        $stmt->bind_param("s",$nick);
+        $stmt->execute();
+        $stmt->store_result();
+    
+        if($stmt->num_rows>0)
+        {
+    
+            $stmt->close();
+            return true;
+        }
+        else{
+            $stmt->close();
+            return false;
+        }
+    }
+
+    public function storeNino($nick,$fecha_nacimiento,$nombre,$apellido,$id_tutor){
+        
+        $Id_nino=5;
+
+        $stmt=$this->conn->prepare("INSERT INTO Nino(Id_nino,Nick,Fecha_nacimiento,Nombre,Apellido,Id_tutor_principal) Values (?,?,?,?,?,?)");
+        $stmt->bind_param("ssssss",$Id_nino,$nick,$fecha_nacimiento,$nombre,$apellido,$id_tutor);
+        $result =$stmt->execute();
+        $stmt->close();
+        if($result){
+            $stmt =$this->conn->prepare("SELECT * FROM nino WHERE Nick =? ");
+            $stmt->bind_param("s",$nick);
+            $stmt->execute();
+            $user = $stmt->get_result()->fetch_assoc();
+            $stmt->close();
+            return $user;
+        }else {
+            return false;
+        }
+    
     }
 
     private function hashSSHA($password)
