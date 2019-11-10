@@ -13,39 +13,43 @@ class DBFunctions
     public function __destruct()
     {}
 
-    public function insertTutor()
+    public function insertTutor($name, $surname, $email, $password, $birth=null)
     {
-        // prepare and bind
-        $stmt = $this->conn->prepare("INSERT INTO Tutor ()
-                VALUES(:first_name, :last_name, :email)");
-        // TO-DO: set parameters and execute
-        $stmt->bind_param(':first_name', $name);
-        $stmt->bind_param(':last_name', $surname);
-        $stmt->bind_param(':email', $email);
-        
+        $stmt = $this->conn->prepare("INSERT INTO tutor (nombre, apellido, email, crypto_pass, salt, birth_date) VALUES(?,?,?,?,?,?)");
+        $hash = $this->hashSSHA($password);
+        $stmt->bind_param("ssssss", $name, $surname, $email, $hash["encrypted"], $hash["salt"], $birth);
 
-        if ($stmt->execute()) {
+        $result = $stmt->execute();
+        $stmt->close();
+        if ($result) {
+            echo "New record created successfully!\n";
 
+            $stmt = $this->conn->prepare("SELECT id_tutor, nombre, apellido, email, birth_date FROM tutor WHERE email =? ");
+            $stmt->bind_param("s", $email);
+            $stmt->execute();
+            $user = $stmt->get_result()->fetch_assoc();
+            $stmt->close();
+            return $user;
         } else {
+            echo "Could not create such record\n";
             return null;
         }
     }
 
     public function getTutorEmailPass($email, $password)
     {
-        $stmt = $this->conn->prepare("SELECT * FROM Tutor WHERE Email =? ");
+        $stmt = $this->conn->prepare("SELECT * FROM tutor WHERE email = ? ");
         $stmt->bind_param("s", $email);
 
         if ($stmt->execute()) {
             $user = $stmt->get_result()->fetch_assoc();
             $stmt->close();
-            $salt = $user['Salt'];
-            $Contrasena = $user['Contrasena'];
+            $salt = $user['salt'];
+            $encrypted = $user['crypto_pass'];
             $hash = $this->checkHashSSHA($salt, $password);
-            if ($Contrasena == $hash) {
+            if ($encrypted == $hash) {
                 return $user;
             }
-
         } else {
             return null;
         }
@@ -53,7 +57,7 @@ class DBFunctions
 
     public function getTutorById($tutorId)
     {
-        $stmt = $this->conn->prepare("SELECT * FROM Tutor WHERE Id_tutor =? ");
+        $stmt = $this->conn->prepare("SELECT * FROM tutor WHERE id_tutor = ? ");
         $stmt->bind_param("s", $tutorId);
 
         if ($stmt->execute()) {
@@ -67,7 +71,7 @@ class DBFunctions
 
     public function getNinoById($ninoId)
     {
-        $stmt = $this->conn->prepare("SELECT * FROM Nino WHERE Id_Nino =? ");
+        $stmt = $this->conn->prepare("SELECT * FROM kid WHERE id_kid = ? ");
         $stmt->bind_param("s", $ninoId);
 
         if ($stmt->execute()) {
@@ -81,7 +85,7 @@ class DBFunctions
 
     public function getTutoriaTutorNino($tutorId, $ninoId)
     {
-        $stmt = $this->conn->prepare("SELECT * FROM Tutoria WHERE Id_tutor =? and Id_Nino=? ");
+        $stmt = $this->conn->prepare("SELECT * FROM tutor_kid_relation WHERE id_tutor = ? and id_kid = ? ");
         $stmt->bind_param("ss", $tutorId, $ninoId);
 
         if ($stmt->execute()) {
@@ -94,7 +98,7 @@ class DBFunctions
     }
     public function delTutoria($tutorId, $ninoId)
     {
-        $stmt = $this->conn->prepare("DELETE FROM Tutoria WHERE Id_tutor =? and Id_Nino=?");
+        $stmt = $this->conn->prepare("DELETE FROM tutor_kid_relation WHERE id_tutor =? and id_kid =?");
         $stmt->bind_param('ss', $tutorId, $ninoId);
         $result = $stmt->execute();
         $stmt->close();
@@ -102,43 +106,61 @@ class DBFunctions
 
     }
 
-    public function existeNick($nick){
-        $stmt =$this->conn->prepare("SELECT * FROM Nino WHERE nick =?");
-        $stmt->bind_param("s",$nick);
+    public function existeEmail($email)
+    {
+        $stmt = $this->conn->prepare("SELECT * FROM tutor WHERE email = ?");
+        $stmt->bind_param("s", $email);
         $stmt->execute();
         $stmt->store_result();
-    
-        if($stmt->num_rows>0)
-        {
-    
+
+        if ($stmt->num_rows > 0) {
             $stmt->close();
             return true;
-        }
-        else{
+        } else {
             $stmt->close();
             return false;
         }
     }
 
-    public function storeNino($nick,$fecha_nacimiento,$nombre,$apellido,$id_tutor){
-        
-        $Id_nino=5;
+    public function existeNick($nick)
+    {
+        $stmt = $this->conn->prepare("SELECT * FROM kid WHERE nick = ?");
+        $stmt->bind_param("s", $nick);
+        $stmt->execute();
+        $stmt->store_result();
 
-        $stmt=$this->conn->prepare("INSERT INTO Nino(Id_nino,Nick,Fecha_nacimiento,Nombre,Apellido,Id_tutor_principal) Values (?,?,?,?,?,?)");
-        $stmt->bind_param("ssssss",$Id_nino,$nick,$fecha_nacimiento,$nombre,$apellido,$id_tutor);
-        $result =$stmt->execute();
+        if ($stmt->num_rows > 0) {
+            $stmt->close();
+            return true;
+        } else {
+            $stmt->close();
+            return false;
+        }
+    }
+
+    public function storeNino($nick, $nombre, $apellido, $id_tutor, $birth=null)
+    {
+
+        //$id_kid = 5;
+
+        $stmt = $this->conn->prepare("INSERT INTO kid (nick, nombre, apellido, id_main_tutor, birth_date) Values (?,?,?,?,?)");
+        $stmt->bind_param("sssss", $nick, $nombre, $apellido, $id_tutor, $birth);
+        $result = $stmt->execute();
         $stmt->close();
-        if($result){
-            $stmt =$this->conn->prepare("SELECT * FROM nino WHERE Nick =? ");
-            $stmt->bind_param("s",$nick);
+        if ($result) {
+            echo "New record created successfully!\n";
+
+            $stmt = $this->conn->prepare("SELECT * FROM kid WHERE nick =? ");
+            $stmt->bind_param("s", $nick);
             $stmt->execute();
             $user = $stmt->get_result()->fetch_assoc();
             $stmt->close();
             return $user;
-        }else {
+        } else {
+            echo "Could not create such record\n";
             return false;
         }
-    
+
     }
 
     private function hashSSHA($password)

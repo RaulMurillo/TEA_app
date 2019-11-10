@@ -1,7 +1,7 @@
 <?php
 require_once 'db_function.php';
 $db = new DBFunctions();
-$response = array("error" => false);
+//$response = array("error" => false);
 
 // define variables and set to empty values
 $name = $email = $surname = $password = $cpassword = "";
@@ -36,8 +36,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             throw new Exception("Invalid email format");
         }
-        // TO-DO: check if e-mail already exists
-        if (...) {
+        // check if e-mail already exists
+        if ($db->existeEmail($email)) {
             throw new Exception("This e-mail already exists");
         }
     }
@@ -45,7 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (!empty($_POST["password"]) && ($_POST["password"] == $_POST["cpassword"])) {
         $password = test_input($_POST["password"]);
         //$cpassword = test_input($_POST["cpassword"]);
-        if (strlen($_POST["password"]) <= '8') {
+        if (strlen($_POST["password"]) < '8') {
             throw new Exception("Your password must contain at least 8 characters");
         } elseif (!preg_match("#[0-9]+#", $password)) {
             throw new Exception("Your password must contain at least 1 number");
@@ -53,14 +53,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             throw new Exception("Your password must contain at least 1 capital letter");
         } elseif (!preg_match("#[a-z]+#", $password)) {
             throw new Exception("Your password must contain at least 1 lowercase letter");
-        }        
+        }
     } elseif (!empty($_POST["password"])) {
         throw new Exception("Please check you've entered or confirmed your password");
     } else {
         throw new Exception("Please enter password");
     }
-    // TO-DO: Create DB entry.
-    $user = $db->insertTutor();
+    // Create DB entry.
+    if (isset($_POST['birth'])) {
+        // Errors in date format are not checked
+        $user = $db->insertTutor($name, $surname, $email, $password, $_POST['birth']);
+    } else {
+        $user = $db->insertTutor($name, $surname, $email, $password);
+    }
     echo json_encode($user);
 }
 /*Each $_POST variable with be checked by the function*/

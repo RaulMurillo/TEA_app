@@ -14,12 +14,12 @@ if (isset($_POST['contrasena']) && isset($_POST['email'])) {
     
         
         $response["error"] = FALSE;
-        $response["tutor"]["idTutor"] = $user["Id_tutor"];
-        $response["tutor"]["email"] = $user["Email"];
-        $response["tutor"]["nombre"] = $user["Nombre"];
-        $response["tutor"]["apellidos"] = $user["Apellidos"];
-        $response["tutor"]["fechaNacimiento"] = $user["Fecha_nacimiento"];
-        $response["tutor"]["tipoTutor"] = $user["Tipo_tutor"];
+        $response["tutor"]["id_tutor"] = $user["id_tutor"];
+        $response["tutor"]["email"] = $user["email"];
+        $response["tutor"]["nombre"] = $user["nombre"];
+        $response["tutor"]["apellido"] = $user["apellido"];
+        $response["tutor"]["fechaNacimiento"] = $user["birth_date"];
+        //$response["tutor"]["tipoTutor"] = $user["Tipo_tutor"];
         echo json_encode($response);
        
     } else {

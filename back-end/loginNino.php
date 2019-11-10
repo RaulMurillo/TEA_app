@@ -6,7 +6,7 @@ if (isset($_POST['ninoId']) && isset($_POST['tutorId'])) {
     $tutorId = $_POST['tutorId'];
     $ninoId = $_POST['ninoId'];
     $relation = $db->getTutoriaTutorNino($tutorId, $ninoId);
-    if ($relation != null && $relation['Estado_solicitud'] == 'Aceptado') { //Aceptado?? BBDD type enum.
+    if ($relation != null && $relation['state'] == 'ACCEPTED') { //Aceptado?? BBDD type enum.
 
         $user = $db->getNinoById($ninoId);
         /*
@@ -26,7 +26,7 @@ if (isset($_POST['ninoId']) && isset($_POST['tutorId'])) {
 
     } else {
         $response["error"] = true;
-        $response["error_msg"] = "email o contrasena incorrectos";
+        $response["error_msg"] = "No tienes acceso a ese perfil";
         echo json_encode($response);
     }
 } else {
