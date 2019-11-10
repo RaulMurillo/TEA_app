@@ -96,6 +96,38 @@ class DBFunctions
             return null;
         }
     }
+    public function createTutoria($tutorId, $ninoId,$estado)
+    {
+        $stmt = $this->conn->prepare("INSERT INTO tutor_kid_relation(id_tutor, id_kid,state) Values (?,?,?)");
+        $stmt->bind_param("sss", $tutorId, $ninoId,$estado);
+
+        if ($stmt->execute()) {
+            echo "New Tutoria created successfully!\n";
+
+            $tutoria = $this->getTutoriaTutorNino($tutorId,$ninoId);
+            $stmt->close();
+            return $tutoria;
+        } else {
+            echo "Could not create such record\n";
+            return false;
+        }
+    }
+     public function updateTutoria($tutorId, $ninoId,$estado)
+    {
+        $stmt = $this->conn->prepare("UPDATE tutor_kid_relation SET state = ? WHERE id_tutor = ? and id_kid = ? ");
+        $stmt->bind_param("sss", $estado, $tutorId, $ninoId);
+
+        if ($stmt->execute()) {
+            echo "State changed successfully!\n";
+
+            $tutoria = $this->getTutoriaTutorNino($tutorId,$ninoId);
+            $stmt->close();
+            return $tutoria;
+        } else {
+            echo "Could not create such record\n";
+            return false;
+        }
+    }
     public function delTutoria($tutorId, $ninoId)
     {
         $stmt = $this->conn->prepare("DELETE FROM tutor_kid_relation WHERE id_tutor =? and id_kid =?");
