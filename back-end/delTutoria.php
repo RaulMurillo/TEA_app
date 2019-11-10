@@ -9,7 +9,7 @@ if(  isset($_POST['Nino'])&& isset($_POST['Tutor'])) {
 	if($user_nino!=FALSE){
 		$user_tutor=$db->getTutorById($tutor);
 		if($user_tutor!=FALSE){
-			if($user_nino["Id_tutor_principal"]!=$tutor){
+			if($user_nino["id_main_tutor"]!=$tutor){
 				$tutoria=$db->getTutoriaTutorNino($tutor,$nino);
 				if($tutoria!=FALSE){
 					if($db->delTutoria($tutor, $nino))

@@ -40,13 +40,8 @@ if (isset($_POST['Nick']) && isset($_POST['Nombre']) && isset($_POST['Apellido']
     }
 
 } else {
-    if (isset($_POST['Tutor'])) {
-        $response["error_msg"] = "falta .$fecha_nacimiento.";
-    } else {
-        $response["error_msg"] = "falta otro";
-    }
-
+    
+    $response["error_msg"] = "faltan campos";
     $response["error"] = true;
-
     echo json_encode($response);
 }
