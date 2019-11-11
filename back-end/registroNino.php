@@ -28,9 +28,17 @@ if (isset($_POST['Nick']) && isset($_POST['Nombre']) && isset($_POST['Apellido']
         } else {
             $user = $db->storeNino($nick, $nombre, $apellido, $id_tutor, $fecha_nacimiento);
             if ($user) {
+                $tutoria = $db->createTutoria($id_tutor,$user["id_kid"],"ACCEPTED");
+                if ($tutoria) {
+                $response["tutoria"] = $tutoria;
                 $response["error"] = false;
                 $response["user"] = $user;
-                echo json_encode($response);
+                echo json_encode($response);}
+            else{
+                $response["user"] = $user;
+                $response["error"] = true;
+                $response["error_msg"] = "niño creado pero no se pudo establecer la relacion";
+            }
             } else {
                 $response["error"] = true;
                 $response["error_msg"] = "error desconocido";
