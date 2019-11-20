@@ -5,9 +5,9 @@ require_once 'db_function.php';
 $db = new DBFunctions();
 $response = array("error" => FALSE);
 
-if (isset($_POST['contrasena']) && isset($_POST['email'])) {
+if (isset($_POST['password']) && isset($_POST['email'])) {
     $email = $_POST['email'];
-    $contra = $_POST['contrasena'];
+    $contra = $_POST['password'];
     $user = $db->getTutorEmailPass($email, $contra);
     if ($user != FALSE) {
         
