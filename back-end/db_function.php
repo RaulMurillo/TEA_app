@@ -82,7 +82,19 @@ class DBFunctions
             return null;
         }
     }
+    public function getTaskById($taskId)
+    {
+        $stmt = $this->conn->prepare("SELECT * FROM tareas WHERE id_tarea = ? ");
+        $stmt->bind_param("s", $taskId);
 
+        if ($stmt->execute()) {
+            $user = $stmt->get_result()->fetch_assoc();
+            $stmt->close();
+            return $user;
+        } else {
+            return null;
+        }
+    }
     public function getTutoriaTutorNino($tutorId, $ninoId)
     {
         $stmt = $this->conn->prepare("SELECT * FROM tutor_kid_relation WHERE id_tutor = ? and id_kid = ? ");
@@ -137,6 +149,15 @@ class DBFunctions
         return $result;
 
     }
+    public function delTask($id_tarea)
+    {
+        $stmt = $this->conn->prepare("DELETE FROM tareas WHERE id_tarea =?");
+        $stmt->bind_param('s', $id_tarea);
+        $result = $stmt->execute();
+        $stmt->close();
+        return $result;
+
+    }
 
     public function existeEmail($email)
     {
@@ -184,6 +205,30 @@ class DBFunctions
 
             $stmt = $this->conn->prepare("SELECT * FROM kid WHERE nick =? ");
             $stmt->bind_param("s", $nick);
+            $stmt->execute();
+            $user = $stmt->get_result()->fetch_assoc();
+            $stmt->close();
+            return $user;
+        } else {
+            echo "Could not create such record\n";
+            return false;
+        }
+
+    }
+
+
+    public function storeTask( $tini,$tfin,$path_picto,$id_tutor,$id_nino,$text,$id_day)
+    {
+        $tstam= date('Y-m-d H:i:s');
+        $stmt = $this->conn->prepare("INSERT INTO task (t_ini, t_fin, path_picto, texto,tstamp, id_kid,id_tutor,id_day) Values (?,?,?,?,?,?,?,?)");
+        $stmt->bind_param("ssssssss", $tini,$tfin,$path_picto,$text,$tstam,$id_nino,$id_tutor,$id_day);
+        $result = $stmt->execute();
+        $stmt->close();
+        if ($result) {
+            echo "New record created successfully!\n";
+
+            $stmt = $this->conn->prepare("SELECT * FROM task WHERE tstamp =? and id_tutor =? and id_kid =?");
+            $stmt->bind_param("sss", $tstam,$id_tutor,$id_nino);
             $stmt->execute();
             $user = $stmt->get_result()->fetch_assoc();
             $stmt->close();
