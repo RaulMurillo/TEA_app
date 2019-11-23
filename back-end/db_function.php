@@ -239,13 +239,13 @@ class DBFunctions
         }
 
     }
-    public function updateTask( $tini,$tfin,$path_picto,$id_tutor,$id_nino,$text,$id_dia,$id_tarea)
+    public function updateTask( $tini,$tfin,$path_picto,$id_tutor,$id_nino,$text,$id_tarea)
     {
         $tstam= date('Y-m-d H:i:s');
         //UPDATE tblFacilityHrs SET title = ?, description = ? WHERE uid = ?
         $stmt = $this->conn->prepare("UPDATE  tareas SET hora_inicio = ?, hora_fin= ?, id_nino= ?, id_tutor= ?
-                                        ,texto= ?, path_picto= ?,t_stamp= ?,id_dia= ? WHERE id_tarea = ?");
-        $stmt->bind_param("sssssssss", $tini,$tfin,$id_nino,$id_tutor,$text,$path_picto,$tstam,$id_dia,$id_tarea);
+                                        ,texto= ?, path_picto= ?,t_stamp= ? WHERE id_tarea = ?");
+        $stmt->bind_param("ssssssss", $tini,$tfin,$id_nino,$id_tutor,$text,$path_picto,$tstam,$id_tarea);
         $result = $stmt->execute();
         $stmt->close();
         if ($result) {
@@ -280,7 +280,7 @@ class DBFunctions
     }
 
 
-
+//colisiones en proceso
     public function collisions($dia,$tini,$tfin){
         $stmt = $this->conn->prepare("SELECT * FROM tareas WHERE ( ( hora_inicio >= ? and hora_fin >= ? ) or
                                          ( hora_inicio <= ? and hora_fin >= ? ) or 
@@ -306,6 +306,7 @@ class DBFunctions
         $stmt->bind_param("ssssssss",$tini,$tfin,$tini,$tfin,$tini,$tfin,$dia,$id_tarea);
         $stmt->execute();
         $stmt->store_result();
+        
 
         if ($stmt->num_rows > 0) {
             $stmt->close();

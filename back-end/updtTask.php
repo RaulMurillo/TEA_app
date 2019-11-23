@@ -26,8 +26,10 @@ if (isset($_POST['Tini']) && isset($_POST['Tfin']) && isset($_POST['Path_picto']
             echo json_encode($response);
         } else {
             //existe dia
+            //existe tarea
+            //refinar colisiones
             if(!$db->collisionsUpdate($id_dia,$tini,$tfin,$id_tarea)){
-                $task = $db->updateTask( $tini,$tfin,$path_picto,$id_tutor,$id_nino,$text,$id_dia,$id_tarea);
+                $task = $db->updateTask( $tini,$tfin,$path_picto,$id_tutor,$id_nino,$text,$id_tarea);
                 if ($task) {
                     $response["error"] = false;
                     $response["task"] = $task;
