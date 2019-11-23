@@ -3,7 +3,7 @@ require_once 'db_function.php';
 $db = new DBFunctions();
 $response = array("error" => false);
 
-if (isset($_POST['Tini']) && isset($_POST['Tfin']) && isset($_POST['Path_picto'])
+if (isset($_POST['Tini']) && isset($_POST['Tfin']) && isset($_POST['Path_picto'])&& isset($_POST['Tarea'])
          && isset($_POST['Tutor'])&& isset($_POST['Nino']) && isset($_POST['Text'])&& isset($_POST['Dia'])) {
     $id_dia=$_POST['Dia'];
     $tini = $_POST['Tini'];
@@ -12,6 +12,7 @@ if (isset($_POST['Tini']) && isset($_POST['Tfin']) && isset($_POST['Path_picto']
     $id_tutor = $_POST['Tutor'];
     $id_nino = $_POST['Nino'];
     $text = $_POST['Text'];
+    $id_tarea = $_POST['Tarea'];
 
     if (!$db->getNinoById($id_nino)) {
         $response["error"] = true;
@@ -25,8 +26,8 @@ if (isset($_POST['Tini']) && isset($_POST['Tfin']) && isset($_POST['Path_picto']
             echo json_encode($response);
         } else {
             //existe dia
-            if(!$db->collisions($id_dia,$tini,$tfin)){
-                $task = $db->storeTask( $tini,$tfin,$path_picto,$id_tutor,$id_nino,$text,$id_dia);
+            if(!$db->collisionsUpdate($id_dia,$tini,$tfin,$id_tarea)){
+                $task = $db->updateTask( $tini,$tfin,$path_picto,$id_tutor,$id_nino,$text,$id_dia,$id_tarea);
                 if ($task) {
                     $response["error"] = false;
                     $response["task"] = $task;

@@ -12,14 +12,14 @@ if(  isset($_POST['Task'])) {
 		$response["error_msg"]="Error inesperado";
 			echo json_encode($response);
 	}
-	}
+	
 	else{
 		$response["error"]=TRUE;
 		$response["error_msg"]="La tarea no existe ";
 		echo json_encode($response);
 	}
-
 }
+
 else{
 	$response["error"]=TRUE;
 	$response["error_msg"]="falta algun parametro";
