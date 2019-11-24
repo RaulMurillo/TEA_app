@@ -282,10 +282,11 @@ class DBFunctions
 
 //colisiones en proceso
     public function collisions($dia,$tini,$tfin){
-        $stmt = $this->conn->prepare("SELECT * FROM tareas WHERE ( ( hora_inicio >= ? and hora_fin >= ? ) or
-                                         ( hora_inicio <= ? and hora_fin >= ? ) or 
-                                         ( hora_inicio >= ? and hora_fin <= ? ) ) and id_dia = ?");
-        $stmt->bind_param("sssssss",$tini,$tfin,$tini,$tfin,$tini,$tfin,$dia);
+        $stmt = $this->conn->prepare("SELECT * FROM tareas WHERE ( ( hora_inicio <= ? and ?<= hora_fin ) or
+                                         ( ? <= hora_fin and hora_fin <= ? ) or 
+                                         ( hora_inicio <= ? and  ? <= hora_fin ) or ( ? <= hora_inicio and hora_fin <= ?) ) 
+                                         and id_dia = ?");
+        $stmt->bind_param("sssssssss",$tfin,$tfin,$tini,$tfin,$tini,$tfin,$tini,$tfin,$dia);
         $stmt->execute();
         $stmt->store_result();
 
@@ -300,10 +301,11 @@ class DBFunctions
     }
 
     public function collisionsUpdate($dia,$tini,$tfin,$id_tarea){
-        $stmt = $this->conn->prepare("SELECT * FROM tareas WHERE ( ( hora_inicio >= ? and hora_fin >= ? ) or
-                                         ( hora_inicio <= ? and hora_fin >= ? ) or 
-                                         ( hora_inicio >= ? and hora_fin <= ? ) ) and id_dia = ? and id_tarea != ?");
-        $stmt->bind_param("ssssssss",$tini,$tfin,$tini,$tfin,$tini,$tfin,$dia,$id_tarea);
+        $stmt = $this->conn->prepare("SELECT * FROM tareas WHERE ( ( hora_inicio <= ? and ?<= hora_fin ) or
+        ( ? <= hora_fin and hora_fin <= ? ) or 
+        ( hora_inicio <= ? and  ? <= hora_fin ) or ( ? <= hora_inicio and hora_fin <= ?) ) 
+                                            and id_dia = ? and id_tarea != ?");
+        $stmt->bind_param("ssssssssss",$tfin,$tfin,$tini,$tfin,$tini,$tfin,$tini,$tfin,$dia,$id_tarea);
         $stmt->execute();
         $stmt->store_result();
         
