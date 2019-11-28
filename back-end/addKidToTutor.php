@@ -16,7 +16,7 @@ if(  isset($_POST['id_kid']) && isset($_POST['id_tutor'])) {
             if($tutoria == FALSE){
                 $tutoria = $db->createTutoria($id_tutor,$id_kid,$estado);
                 $response["error"] = FALSE;
-                $response["turotia"] = $tutoria;
+                $response["tutoria"] = $tutoria;
 			    echo json_encode($response);
             }
             else{
