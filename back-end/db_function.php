@@ -220,7 +220,7 @@ class DBFunctions
     public function storeTask( $tini,$tfin,$path_picto,$id_tutor,$id_nino,$text,$id_dia)
     {
         $tstam= date('Y-m-d H:i:s');
-        $stmt = $this->conn->prepare("INSERT INTO tareas (hora_inicio, hora_fin, id_nino, id_tutor,texto, path_picto,t_stamp,id_dia) Values (?,?,?,?,?,?,?,?)");
+        $stmt = $this->conn->prepare("INSERT INTO tareas (hora_inicio, hora_fin, id_nino, id_tutor,texto, path_picto,t_stamp,dia) Values (?,?,?,?,?,?,?,?)");
         $stmt->bind_param("ssssssss", $tini,$tfin,$id_nino,$id_tutor,$text,$path_picto,$tstam,$id_dia);
         $result = $stmt->execute();
         $stmt->close();
@@ -285,7 +285,7 @@ class DBFunctions
         $stmt = $this->conn->prepare("SELECT * FROM tareas WHERE ( ( hora_inicio <= ? and ?<= hora_fin ) or
                                          ( ? <= hora_fin and hora_fin <= ? ) or 
                                          ( hora_inicio <= ? and  ? <= hora_fin ) or ( ? <= hora_inicio and hora_fin <= ?) ) 
-                                         and id_dia = ?");
+                                         and dia = ?");
         $stmt->bind_param("sssssssss",$tfin,$tfin,$tini,$tfin,$tini,$tfin,$tini,$tfin,$dia);
         $stmt->execute();
         $stmt->store_result();
@@ -304,7 +304,7 @@ class DBFunctions
         $stmt = $this->conn->prepare("SELECT * FROM tareas WHERE ( ( hora_inicio <= ? and ?<= hora_fin ) or
         ( ? <= hora_fin and hora_fin <= ? ) or 
         ( hora_inicio <= ? and  ? <= hora_fin ) or ( ? <= hora_inicio and hora_fin <= ?) ) 
-                                            and id_dia = ? and id_tarea != ?");
+                                            and dia = ? and id_tarea != ?");
         $stmt->bind_param("ssssssssss",$tfin,$tfin,$tini,$tfin,$tini,$tfin,$tini,$tfin,$dia,$id_tarea);
         $stmt->execute();
         $stmt->store_result();
