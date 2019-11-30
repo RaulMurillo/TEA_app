@@ -1,7 +1,5 @@
 <?php
 require_once 'db_function.php';
-require_once 'pgregg.php';
-$db = new DBFunctions();
 $response = array("error" => false);
 $result=[];
 $info=array();
