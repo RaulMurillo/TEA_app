@@ -215,7 +215,127 @@ class DBFunctions
         }
 
     }
+    public function getGroupbyName($group)
+    {
+        
+        $stmt = $this->conn->prepare("SELECT * FROM tea_group WHERE nombre = ?");
+        $stmt->bind_param("s", $group);
+        if ($stmt->execute()) {
+            $grupo = $stmt->get_result()->fetch_assoc();
+            $stmt->close();
+            return $grupo;
+        } else {
+            return null;
+        }
+    }
+    public function createGroup($group, $tutor)
+    {
+        $stmt = $this->conn->prepare("INSERT INTO tea_group(id_tutor, nombre) Values (?,?)");
+        $stmt->bind_param("ss", $tutor,$group);
 
+        if ($stmt->execute()) {
+            echo "New Group created successfully!\n";
+
+            $grupo = $this->getGroupbyName($group);
+            $stmt->close();
+            return $grupo;
+        } else {
+            echo "Could not create such record\n";
+            return false;
+        }
+    }
+    public function getGroupKids($group)
+    {
+        $stmt = $this->conn->prepare("SELECT * FROM kid_group_relation WHERE id_group = ?");
+        $stmt->bind_param("s", $group);
+        if ($stmt->execute()) {
+            $grupo = $stmt->get_result()->fetch_array();
+            $stmt->close();
+            return $grupo;
+        } else {
+            return null;
+        }
+    }
+    public function getGroup($group)
+    {
+        $stmt = $this->conn->prepare("SELECT * FROM tea_group WHERE id_group = ?");
+        $stmt->bind_param("s", $group);
+        if ($stmt->execute()) {
+            $grupo = $stmt->get_result()->fetch_assoc();
+            $stmt->close();
+            return $grupo;
+        } else {
+            return null;
+        }  
+    }
+    public function delGroup($group)
+    {
+        $stmt = $this->conn->prepare("DELETE FROM tea_group WHERE id_group =?");
+        $stmt->bind_param('s', $group);
+        $result = $stmt->execute();
+        $stmt->close();
+        return $result;
+    }
+    public function getGroupKidGrupo($id_kid,$id_group)	
+    {
+        $stmt = $this->conn->prepare("SELECT * FROM kid_group_relation WHERE id_group = ? and id_kid = ?");
+        $stmt->bind_param("ss", $id_group,$id_kid);
+        if ($stmt->execute()) {
+            $grupo = $stmt->get_result()->fetch_assoc();
+            $stmt->close();
+            return $grupo;
+        } else {
+            return null;
+        }
+    }
+    public function unionGrupo($id_kid,$id_group)
+    {
+        $stmt = $this->conn->prepare("INSERT INTO kid_group_relation (id_group, id_kid) Values (?,?)");
+        $stmt->bind_param("ss",$id_group,$id_kid);
+
+        if ($stmt->execute()) {
+            echo "New Group created successfully!\n";
+
+            $grupo = $this->getGroupsNino($id_kid);
+            $stmt->close();
+            return $grupo;
+        } else {
+            echo "Could not create such record\n";
+            return false;
+        }
+    }
+    public function delKidGroup($id_group,$id_kid)
+    {
+        $stmt = $this->conn->prepare("DELETE FROM kid_group_relation WHERE id_group =? and id_kid = ?");
+        $stmt->bind_param('ss', $id_group,$id_kid);
+        $result = $stmt->execute();
+        $stmt->close();
+        return $result;
+    }
+    public function getGroupsNino($id_kid)
+    {
+        $stmt = $this->conn->prepare("SELECT * FROM kid_group_relation WHERE  id_kid = ?");
+        $stmt->bind_param("s",$id_kid);
+        if ($stmt->execute()) {
+            $grupo = $stmt->get_result()->fetch_array();
+            $stmt->close();
+            return $grupo;
+        } else {
+            return null;
+        }
+    }
+    public function getGroupsTutor($tutor)
+    {
+        $stmt = $this->conn->prepare("SELECT * FROM tea_group WHERE  id_tutor = ?");
+        $stmt->bind_param("s",$tutor);
+        if ($stmt->execute()) {
+            $grupo = $stmt->get_result()->fetch_array();
+            $stmt->close();
+            return $grupo;
+        } else {
+            return null;
+        }
+    }
 
     public function storeTask( $tini,$tfin,$path_picto,$id_tutor,$id_nino,$text,$id_dia)
     {
