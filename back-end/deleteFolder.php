@@ -1,5 +1,18 @@
 <?php
-
+function rrmdir($dir) { 
+    if (is_dir($dir)) { 
+      $objects = scandir($dir); 
+      foreach ($objects as $object) { 
+        if ($object != "." && $object != "..") { 
+          if (is_dir($dir."/".$object) && !is_link($dir."/".$object))
+            rrmdir($dir."/".$object);
+          else
+            unlink($dir."/".$object); 
+        } 
+      }
+      rmdir($dir); 
+    } 
+  }
 
 $response = array("error" => false);
 
@@ -7,7 +20,7 @@ if (isset($_POST['carpeta']) && isset($_POST['idTutor'])) {
     $directorio='picts/usr/'.$_POST['idTutor']."/".$_POST['carpeta'];
     
     if(is_dir($directorio)){
-        rmdir($directorio);
+        rrmdir($directorio);
         http_response_code(200);
         $response["error"] = false;
         echo json_encode($response);
