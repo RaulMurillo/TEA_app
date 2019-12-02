@@ -249,7 +249,7 @@ class DBFunctions
         $stmt = $this->conn->prepare("SELECT * FROM kid_group_relation WHERE id_group = ?");
         $stmt->bind_param("s", $group);
         if ($stmt->execute()) {
-            $grupo = $stmt->get_result()->fetch_array();
+            $grupo = $stmt->get_result()->fetch_all();
             $stmt->close();
             return $grupo;
         } else {
@@ -317,7 +317,7 @@ class DBFunctions
         $stmt = $this->conn->prepare("SELECT * FROM kid_group_relation WHERE  id_kid = ?");
         $stmt->bind_param("s",$id_kid);
         if ($stmt->execute()) {
-            $grupo = $stmt->get_result()->fetch_array();
+            $grupo = $stmt->get_result()->fetch_all();
             $stmt->close();
             return $grupo;
         } else {
@@ -329,7 +329,7 @@ class DBFunctions
         $stmt = $this->conn->prepare("SELECT * FROM tea_group WHERE  id_tutor = ?");
         $stmt->bind_param("s",$tutor);
         if ($stmt->execute()) {
-            $grupo = $stmt->get_result()->fetch_array();
+            $grupo = $stmt->get_result()->fetch_all();
             $stmt->close();
             return $grupo;
         } else {
