@@ -105,6 +105,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         $user = $db->insertTutor($name, $surname, $email, $password);
     }
+
+    // Create pictures user folder
+
+    mkdir("./picts/usr/".$user["id_tutor"], 0700);
+
     $response["user"] = $user;
     echo json_encode($response);
 }
