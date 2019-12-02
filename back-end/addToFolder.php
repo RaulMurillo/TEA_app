@@ -1,5 +1,5 @@
     <?php
-
+    header('Access-Control-Allow-Origin: *');
     $response = array("error" => false);
     $result=[];
     $info=array();

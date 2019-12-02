@@ -1,5 +1,5 @@
 <?php
-
+header('Access-Control-Allow-Origin: *');
 
 $response = array("error" => false);
 if (isset($_POST['carpeta']) && isset($_POST['idTutor'])) {

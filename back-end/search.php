@@ -1,4 +1,5 @@
 <?php
+header('Access-Control-Allow-Origin: *');
 require_once 'db_function.php';
 $response = array("error" => false);
 $result=[];
