@@ -13,6 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $response["error"] = true;
         $response["error_msg"] = "Introduce a user name, please";
         echo json_encode($response);
+        exit();
     } else {
         $name = test_input($_POST["name"]);
         // check if name only contains letters and whitespace
@@ -21,6 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $response["error"] = true;
             $response["error_msg"] = "Introduce a user name, please";
             echo json_encode($response);
+            exit();
         }
     }
     //Validates User surname
@@ -29,6 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $response["error"] = true;
         $response["error_msg"] = "Introduce a user surname, please";
         echo json_encode($response);
+        exit();
     } else {
         $surname = test_input($_POST["surname"]);
         // check if name only contains letters and whitespace
@@ -37,6 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $response["error"] = true;
             $response["error_msg"] = "Only letters and white space allowed as user name";
             echo json_encode($response);
+            exit();
         }
     }
     //Validates email
@@ -45,6 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $response["error"] = true;
         $response["error_msg"] = "Email is required";
         echo json_encode($response);
+        exit();
     } else {
         $email = test_input($_POST["email"]);
         // check if e-mail address is well-formed
@@ -53,6 +58,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $response["error"] = true;
             $response["error_msg"] = "Introduce a valid email, please";
             echo json_encode($response);
+            exit();
         }
         // check if e-mail already exists
         if ($db->existeEmail($email)) {
@@ -60,6 +66,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $response["error"] = true;
             $response["error_msg"] = "This e-mail already exists";
             echo json_encode($response);
+            exit();
         }
     }
     //Validates password & confirm passwords.
@@ -71,32 +78,38 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $response["error"] = true;
             $response["error_msg"] = "Your password must contain at least 8 characters";
             echo json_encode($response);
+            exit();
         } elseif (!preg_match("#[0-9]+#", $password)) {
             //throw new Exception("Your password must contain at least 1 number");
             $response["error"] = true;
             $response["error_msg"] = "Your password must contain at least 1 number";
             echo json_encode($response);
+            exit();
         } elseif (!preg_match("#[A-Z]+#", $password)) {
             //throw new Exception("Your password must contain at least 1 capital letter");
             $response["error"] = true;
             $response["error_msg"] = "Your password must contain at least 1 capital letter";
             echo json_encode($response);
+            exit();
         } elseif (!preg_match("#[a-z]+#", $password)) {
             //throw new Exception("Your password must contain at least 1 lowercase letter");
             $response["error"] = true;
             $response["error_msg"] = "Your password must contain at least 1 lowercase letter";
             echo json_encode($response);
+            exit();
         }
     } elseif (!empty($_POST["password"])) {
         //throw new Exception("Please check you've entered or confirmed your password");
         $response["error"] = true;
         $response["error_msg"] = "Please check you've entered or confirmed your password";
         echo json_encode($response);
+        exit();
     } else {
         //throw new Exception("Please enter password");
         $response["error"] = true;
         $response["error_msg"] = "Please enter password";
         echo json_encode($response);
+        exit();
     }
     // Create DB entry.
     if (isset($_POST['birth'])) {

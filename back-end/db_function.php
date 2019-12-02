@@ -22,7 +22,7 @@ class DBFunctions
         $result = $stmt->execute();
         $stmt->close();
         if ($result) {
-            echo "New record created successfully!\n";
+            //echo "New record created successfully!\n";
 
             $stmt = $this->conn->prepare("SELECT id_tutor, nombre, apellido, email, birth_date FROM tutor WHERE email =? ");
             $stmt->bind_param("s", $email);
@@ -31,7 +31,7 @@ class DBFunctions
             $stmt->close();
             return $user;
         } else {
-            echo "Could not create such record\n";
+            //echo "Could not create such record\n";
             return null;
         }
     }
@@ -114,13 +114,13 @@ class DBFunctions
         $stmt->bind_param("sss", $tutorId, $ninoId,$estado);
 
         if ($stmt->execute()) {
-            echo "New Tutoria created successfully!\n";
+            // echo "New Tutoria created successfully!\n";
 
             $tutoria = $this->getTutoriaTutorNino($tutorId,$ninoId);
             $stmt->close();
             return $tutoria;
         } else {
-            echo "Could not create such record\n";
+            // echo "Could not create such record\n";
             return false;
         }
     }
@@ -130,13 +130,13 @@ class DBFunctions
         $stmt->bind_param("sss", $estado, $tutorId, $ninoId);
 
         if ($stmt->execute()) {
-            echo "State changed successfully!\n";
+            // echo "State changed successfully!\n";
 
             $tutoria = $this->getTutoriaTutorNino($tutorId,$ninoId);
             $stmt->close();
             return $tutoria;
         } else {
-            echo "Could not create such record\n";
+            // echo "Could not create such record\n";
             return false;
         }
     }
@@ -201,7 +201,7 @@ class DBFunctions
         $result = $stmt->execute();
         $stmt->close();
         if ($result) {
-            echo "New record created successfully!\n";
+            // echo "New record created successfully!\n";
 
             $stmt = $this->conn->prepare("SELECT * FROM kid WHERE nick =? ");
             $stmt->bind_param("s", $nick);
@@ -210,7 +210,7 @@ class DBFunctions
             $stmt->close();
             return $user;
         } else {
-            echo "Could not create such record\n";
+            // echo "Could not create such record\n";
             return false;
         }
 
@@ -234,13 +234,13 @@ class DBFunctions
         $stmt->bind_param("ss", $tutor,$group);
 
         if ($stmt->execute()) {
-            echo "New Group created successfully!\n";
+            // echo "New Group created successfully!\n";
 
             $grupo = $this->getGroupbyName($group);
             $stmt->close();
             return $grupo;
         } else {
-            echo "Could not create such record\n";
+            // echo "Could not create such record\n";
             return false;
         }
     }
@@ -294,13 +294,13 @@ class DBFunctions
         $stmt->bind_param("ss",$id_group,$id_kid);
 
         if ($stmt->execute()) {
-            echo "New Group created successfully!\n";
+            // echo "New Group created successfully!\n";
 
             $grupo = $this->getGroupsNino($id_kid);
             $stmt->close();
             return $grupo;
         } else {
-            echo "Could not create such record\n";
+            // echo "Could not create such record\n";
             return false;
         }
     }
@@ -345,7 +345,7 @@ class DBFunctions
         $result = $stmt->execute();
         $stmt->close();
         if ($result) {
-            echo "New record created successfully!\n";
+            // echo "New record created successfully!\n";
 
             $stmt = $this->conn->prepare("SELECT * FROM tareas WHERE t_stamp =? and id_tutor =? and id_nino =?");
             $stmt->bind_param("sss", $tstam,$id_tutor,$id_nino);
@@ -354,7 +354,7 @@ class DBFunctions
             $stmt->close();
             return $user;
         } else {
-            echo "Could not create such record\n";
+            // echo "Could not create such record\n";
             return false;
         }
 
@@ -369,7 +369,7 @@ class DBFunctions
         $result = $stmt->execute();
         $stmt->close();
         if ($result) {
-            echo "New record created successfully!\n";
+            // echo "New record created successfully!\n";
 
             $stmt = $this->conn->prepare("SELECT * FROM tareas WHERE id_tarea =?");
             $stmt->bind_param("s", $id_tarea);
@@ -378,7 +378,7 @@ class DBFunctions
             $stmt->close();
             return $user;
         } else {
-            echo "Could not create such record\n";
+            // echo "Could not create such record\n";
             return false;
         }
 
