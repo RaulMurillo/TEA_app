@@ -244,6 +244,20 @@ class DBFunctions
             return false;
         }
     }
+
+    public function getTutorKids($tutor)
+    {
+        $stmt = $this->conn->prepare("SELECT * FROM tutor_kid_relation WHERE id_tutor = ?");
+        $stmt->bind_param("s", $tutor);
+        if ($stmt->execute()) {
+            $grupo = $stmt->get_result()->fetch_all();
+            $stmt->close();
+            return $grupo;
+        } else {
+            return null;
+        }
+    }
+
     public function getGroupKids($group)
     {
         $stmt = $this->conn->prepare("SELECT * FROM kid_group_relation WHERE id_group = ?");
