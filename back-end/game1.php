@@ -44,6 +44,10 @@ class Identificar_picto extends Game{
                 $fileslist = array_slice($fileslist, 2);
                 $pictos = array_rand($fileslist, $this->$imgs);
 
+                for ($j = 0; $j < $this->$imgs; $j++){
+                    $pictos[$j] = $directorio.'/'.$pictos[$j];
+                }
+
                 $sol = random_int(0 , $this->$imgs - 1);
                 $sol_name = explode(".", $pictos[$sol])[0]; 
                 // Substitute _ by blanks
