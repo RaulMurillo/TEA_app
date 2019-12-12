@@ -290,7 +290,7 @@ class DBFunctions
         $stmt->close();
         return $result;
     }
-    public function getGroupKidGrupo($id_kid,$id_group)	
+    public function getGroupKidGrupo($id_kid,$id_group) 
     {
         $stmt = $this->conn->prepare("SELECT * FROM kid_group_relation WHERE id_group = ? and id_kid = ?");
         $stmt->bind_param("ss", $id_group,$id_kid);
@@ -452,5 +452,86 @@ class DBFunctions
             return false;
         }
 
+    }
+
+    public function getStory($id_tutor,$nombre)
+    {
+        $stmt = $this->conn->prepare("SELECT * FROM story WHERE id_tutor = ? and nombre = ? ");
+        $stmt->bind_param("ss", $id_tutor, $nombre);
+        if ($stmt->execute()) {
+            $story = $stmt->get_result()->fetch_assoc();
+            $stmt->close();
+            return $story;
+        } else {
+            return null;
+        }
+    }
+    public function getStoryByid($id_tutor,$id_story)
+    {
+        $stmt = $this->conn->prepare("SELECT * FROM story WHERE id_tutor = ? and id_cuento = ? ");
+        $stmt->bind_param("ss", $id_tutor, $id_story);
+        if ($stmt->execute()) {
+            $story = $stmt->get_result()->fetch_assoc();
+            $stmt->close();
+            return $story;
+        } else {
+            return null;
+        }
+    }
+    public function createStory($id_tutor,$nombre)
+    {
+        $stmt = $this->conn->prepare("INSERT INTO story(id_tutor,nombre) Values (?,?)");
+        $stmt->bind_param("ss", $id_tutor, $nombre);
+
+        if ($stmt->execute()) {
+            // echo "New Tutoria created successfully!\n";
+
+            $story = $this->getStory($id_tutor,$nombre);
+            $stmt->close();
+            return $story;
+        } else {
+            // echo "Could not create such record\n";
+            return false;
+        }
+    }
+    public function getPages($id_cuento)
+    {
+        $stmt = $this->conn->prepare("SELECT * FROM pages WHERE id_cuento = ? ORDER BY id_pagina ASC");
+        $stmt->bind_param("s", $id_cuento);
+        if ($stmt->execute()) {
+            $pages = $stmt->get_result()->fetch_all();
+            $stmt->close();
+            return $pages;
+        } else {
+            return null;
+        }
+    }
+    public function getPage($id_pagina)
+    {
+        $stmt = $this->conn->prepare("SELECT * FROM pages WHERE id_pagina= ?");
+        $stmt->bind_param("s", $id_pagina);
+        if ($stmt->execute()) {
+            $pages = $stmt->get_result()->fetch_assoc();
+            $stmt->close();
+            return $pages;
+        } else {
+            return null;
+        }
+    }
+    public function createPage($id_cuento,$path)
+    {
+        $stmt = $this->conn->prepare("INSERT INTO pages(id_cuento,path) Values (?,?)");
+        $stmt->bind_param("ss", $id_cuento, $path);
+
+        if ($stmt->execute()) {
+            // echo "New Tutoria created successfully!\n";
+
+            $story = $this->getPages($id_cuento);
+            $stmt->close();
+            return $story;
+        } else {
+            // echo "Could not create such record\n";
+            return false;
+        }
     }
 }
