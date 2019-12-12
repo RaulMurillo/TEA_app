@@ -351,11 +351,11 @@ class DBFunctions
         }
     }
 
-    public function storeTask( $tini,$tfin,$path_picto,$id_tutor,$id_nino,$text,$id_dia)
+    public function storeTask( $tini,$tfin,$path_picto,$id_tutor,$id_nino,$text,$id_dia,$tipo,$enlace)
     {
         $tstam= date('Y-m-d H:i:s');
-        $stmt = $this->conn->prepare("INSERT INTO tareas (hora_inicio, hora_fin, id_nino, id_tutor,texto, path_picto,t_stamp,dia) Values (?,?,?,?,?,?,?,?)");
-        $stmt->bind_param("ssssssss", $tini,$tfin,$id_nino,$id_tutor,$text,$path_picto,$tstam,$id_dia);
+        $stmt = $this->conn->prepare("INSERT INTO tareas (hora_inicio, hora_fin, id_nino, id_tutor,texto, path_picto,t_stamp,dia,tipo,enlace) Values (?,?,?,?,?,?,?,?,?,?)");
+        $stmt->bind_param("ssssssssss", $tini,$tfin,$id_nino,$id_tutor,$text,$path_picto,$tstam,$id_dia,$tipo,$enlace);
         $result = $stmt->execute();
         $stmt->close();
         if ($result) {
@@ -373,13 +373,13 @@ class DBFunctions
         }
 
     }
-    public function updateTask( $tini,$tfin,$path_picto,$id_tutor,$id_nino,$text,$id_tarea)
+    public function updateTask( $tini,$tfin,$path_picto,$id_tutor,$id_nino,$text,$id_tarea,$tipo,$enlace)
     {
         $tstam= date('Y-m-d H:i:s');
         //UPDATE tblFacilityHrs SET title = ?, description = ? WHERE uid = ?
         $stmt = $this->conn->prepare("UPDATE  tareas SET hora_inicio = ?, hora_fin= ?, id_nino= ?, id_tutor= ?
-                                        ,texto= ?, path_picto= ?,t_stamp= ? WHERE id_tarea = ?");
-        $stmt->bind_param("ssssssss", $tini,$tfin,$id_nino,$id_tutor,$text,$path_picto,$tstam,$id_tarea);
+                                        ,texto= ?, path_picto= ?, t_stamp= ?, tipo= ?, enlace= ? WHERE id_tarea = ?");
+        $stmt->bind_param("ssssssssss", $tini,$tfin,$id_nino,$id_tutor,$text,$path_picto,$tstam,$tipo,$enlace,$id_tarea);
         $result = $stmt->execute();
         $stmt->close();
         if ($result) {
@@ -426,7 +426,7 @@ class DBFunctions
     }
     public function getSubTask($tarea)
     {
-        $stmt = $this->conn->prepare("SELECT * FROM subtareas WHERE  id_tarea = ? ");
+        $stmt = $this->conn->prepare("SELECT * FROM subtareas WHERE  id_tarea = ? ORDER BY orden ASC");
         $stmt->bind_param("s",$tarea);
         if ($stmt->execute()) {
             $tareas = $stmt->get_result()->fetch_all();
@@ -440,10 +440,10 @@ class DBFunctions
 
 
 
-    public function storeSubTask($task,$texto,$path)
+    public function storeSubTask($task,$texto,$path,$ord)
     {
-        $stmt = $this->conn->prepare("INSERT INTO subtareas (id_tarea, path_pictrograma, texto) Values (?,?,?)");
-        $stmt->bind_param("sss", $task,$path,$texto);
+        $stmt = $this->conn->prepare("INSERT INTO subtareas (id_tarea, path_pictrograma, texto,orden) Values (?,?,?,?)");
+        $stmt->bind_param("ssss", $task,$path,$texto,$ord);
         $result = $stmt->execute();
         $stmt->close();
         if ($result) {
@@ -462,11 +462,11 @@ class DBFunctions
 
     }
 
-   public function updtSubTask($subtask,$texto,$path)
+   public function updtSubTask($subtask,$texto,$path,$ord)
     {
         //UPDATE tblFacilityHrs SET title = ?, description = ? WHERE uid = ?
-        $stmt = $this->conn->prepare("UPDATE  subtareas SET path_pictrograma= ?, texto= ? WHERE id_subtarea = ?");
-        $stmt->bind_param("sss", $path,$texto,$subtask);
+        $stmt = $this->conn->prepare("UPDATE  subtareas SET path_pictrograma= ?, texto= ?, orden= ? WHERE id_subtarea = ?");
+        $stmt->bind_param("ssss", $path,$texto,$ord,$subtask);
         $result = $stmt->execute();
         $stmt->close();
         if ($result) {

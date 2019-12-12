@@ -13,7 +13,7 @@ if (isset($_POST['date']) && isset($_POST['id_nino']) ) {
         echo json_encode($response);
     } else {
         $tareas=$db->getTaskDateKid($dia,$id_nino);
-        $response["Grupos"]=$tareas;
+        $response["Tareas"]=$tareas;
         echo json_encode($response);
     }
 
