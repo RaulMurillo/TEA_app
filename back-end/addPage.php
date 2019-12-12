@@ -17,7 +17,7 @@ if(  isset($_POST['id_tutor']) && isset($_POST['id_cuento'])&& isset($_POST['pat
         {
             http_response_code(200);
             $response["error"] = false;
-            $response["story"] = $pages[count($pages)-1];
+            $response["page"] = $pages[count($pages)-1];
             echo json_encode($response,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES );
         }
         else
