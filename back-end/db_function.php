@@ -398,6 +398,102 @@ class DBFunctions
 
     }
 
+
+    public function getTaskDateKid($dia,$id_nino)
+    {
+        $stmt = $this->conn->prepare("SELECT * FROM tareas WHERE  id_nino = ? and dia = ?");
+        $stmt->bind_param("ss",$id_nino,$dia);
+        if ($stmt->execute()) {
+            $tareas = $stmt->get_result()->fetch_all();
+            $stmt->close();
+            return $tareas;
+        } else {
+            return null;
+        }
+    
+    }
+    public function getSubTaskbyId($subtask)
+    {
+        $stmt = $this->conn->prepare("SELECT * FROM subtareas WHERE  id_subtarea = ? ");
+        $stmt->bind_param("s",$subtask);
+        if ($stmt->execute()) {
+            $tareas = $stmt->get_result()->fetch_assoc();
+            $stmt->close();
+            return $tareas;
+        } else {
+            return null;
+        }
+    }
+    public function getSubTask($tarea)
+    {
+        $stmt = $this->conn->prepare("SELECT * FROM subtareas WHERE  id_tarea = ? ");
+        $stmt->bind_param("s",$tarea);
+        if ($stmt->execute()) {
+            $tareas = $stmt->get_result()->fetch_all();
+            $stmt->close();
+            return $tareas;
+        } else {
+            return null;
+        }
+    
+    }
+
+
+
+    public function storeSubTask($task,$texto,$path)
+    {
+        $stmt = $this->conn->prepare("INSERT INTO subtareas (id_tarea, path_pictrograma, texto) Values (?,?,?)");
+        $stmt->bind_param("sss", $task,$path,$texto);
+        $result = $stmt->execute();
+        $stmt->close();
+        if ($result) {
+            // echo "New record created successfully!\n";
+
+            $stmt = $this->conn->prepare("SELECT * FROM subtareas WHERE id_tarea =? ");
+            $stmt->bind_param("s", $task);
+            $stmt->execute();
+            $user = $stmt->get_result()->fetch_all();
+            $stmt->close();
+            return $user;
+        } else {
+            // echo "Could not create such record\n";
+            return false;
+        }
+
+    }
+
+   public function updtSubTask($subtask,$texto,$path)
+    {
+        //UPDATE tblFacilityHrs SET title = ?, description = ? WHERE uid = ?
+        $stmt = $this->conn->prepare("UPDATE  subtareas SET path_pictrograma= ?, texto= ? WHERE id_subtarea = ?");
+        $stmt->bind_param("sss", $path,$texto,$subtask);
+        $result = $stmt->execute();
+        $stmt->close();
+        if ($result) {
+            // echo "New record created successfully!\n";
+
+            $stmt = $this->conn->prepare("SELECT * FROM subtareas WHERE id_subtarea =?");
+            $stmt->bind_param("s", $subtask);
+            $stmt->execute();
+            $user = $stmt->get_result()->fetch_assoc();
+            $stmt->close();
+            return $user;
+        } else {
+            // echo "Could not create such record\n";
+            return false;
+        }
+
+    }
+
+    public function delSubTask($subtask)
+    {
+        $stmt = $this->conn->prepare("DELETE FROM subtareas WHERE id_subtarea =?");
+        $stmt->bind_param('s', $subtask);
+        $result = $stmt->execute();
+        $stmt->close();
+        return $result;
+    }
+
     private function hashSSHA($password)
     {
         $salt = sha1(rand());
