@@ -478,6 +478,18 @@ class DBFunctions
             return null;
         }
     }
+    public function getStoryByidTutor($id_tutor)
+    {
+        $stmt = $this->conn->prepare("SELECT * FROM story WHERE id_tutor = ? ");
+        $stmt->bind_param("s", $id_tutor);
+        if ($stmt->execute()) {
+            $story = $stmt->get_result()->fetch_all();
+            $stmt->close();
+            return $story;
+        } else {
+            return null;
+        }
+    }
     public function createStory($id_tutor,$nombre)
     {
         $stmt = $this->conn->prepare("INSERT INTO story(id_tutor,nombre) Values (?,?)");
