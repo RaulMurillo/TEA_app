@@ -18,47 +18,53 @@ if(  isset($_POST['Nino'])&& isset($_POST['Tutor']) && isset($_POST['Grupo'])) {
 
 					if($db->delKidGroup($id_group,$id_kid))
 					
-					$response["error_msg"]="Separados correctamente";
+					$response["msg"]="Separados correctamente";
 					else{
+						http_response_code(400);
 						$response["error"]=TRUE;
 						$response["error_msg"]="Error inesperado";
 					}
 
-					echo json_encode($response);
+					echo json_encode($response,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES );
 					
 				}
 				else{
+					http_response_code(400);
 					$response["error"]=TRUE;
 					$response["error_msg"]="No pertenece al grupo ";
-					echo json_encode($response);
+					echo json_encode($response,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES );
 				}
 			}
 			else{
+				http_response_code(400);
 				$response["error"]=TRUE;
 					$response["error_msg"]="No existe el grupo o el tutor no es el propietario";
-					echo json_encode($response);
+					echo json_encode($response,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES );
 
 			}
 		
 	}
 		else{
+			http_response_code(400);
 			$response["error"]=TRUE;
 			$response["error_msg"]="El tutor no existe ";
-			echo json_encode($response);
+			echo json_encode($response,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES );
 		}
 	}
 	else{
+		http_response_code(400);
 		$response["error"]=TRUE;
 		$response["error_msg"]="El nino no existe ";
-		echo json_encode($response);
+		echo json_encode($response,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES );
 	}
 
 }
 
 else{
+	http_response_code(400);
 	$response["error"]=TRUE;
 	$response["error_msg"]="falta algun parametro";
-	echo json_encode($response);
+	echo json_encode($response,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES );
 }
 
 ?>

@@ -13,6 +13,7 @@
             $directorio='picts/usr/'.$_POST['idTutor']."/".$_POST['carpeta']."/".$aux[0].".jpg";
 
             if (!is_file($path) ) {
+                http_response_code(400);
                 $response["error"] = true;
                 $response["error_msg"] = "No existe fichero";
                 echo json_encode($response);

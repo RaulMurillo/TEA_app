@@ -14,9 +14,10 @@ isset($_POST['id_tutor'])&& isset($_POST['orden'])) {
 
         $user_tutor = $db->getTutorById($tutor);
         if (!$user_tutor) {
+            http_response_code(400);
             $response["error"] = true;
             $response["error_msg"] = "El tutor no existe";
-            echo json_encode($response);
+            echo json_encode($response,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES );
         } else {
             $tarea= $db->getTaskById($task);
             if($tarea && $tarea["id_tutor"] == $tutor){
@@ -24,13 +25,14 @@ isset($_POST['id_tutor'])&& isset($_POST['orden'])) {
                 if ($task) {
                     $response["error"] = false;
                     $response["subtask"] = $subtask;
-                    echo json_encode($response);
+                    echo json_encode($response,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES );
                 }  
             }
             else {
                 $response["error_msg"] = "La tarea no existe o el tutor no es el dueño de la tarea";
+                http_response_code(400);
                 $response["error"] = true;
-                echo json_encode($response);
+                echo json_encode($response,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES );
             }
             
         }
@@ -39,6 +41,7 @@ isset($_POST['id_tutor'])&& isset($_POST['orden'])) {
 } else {
     
     $response["error_msg"] = "faltan campos";
+    http_response_code(400);
     $response["error"] = true;
-    echo json_encode($response);
+    echo json_encode($response,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES );
 }

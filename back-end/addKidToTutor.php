@@ -18,28 +18,32 @@ if(  isset($_POST['id_kid']) && isset($_POST['id_tutor'])) {
                 $tutoria = $db->createTutoria($id_tutor,$id_kid,$estado);
                 $response["error"] = FALSE;
                 $response["tutoria"] = $tutoria;
-			    echo json_encode($response);
+			    echo json_encode($response,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES );
             }
             else{
+                http_response_code(400);
                 $response["error"] = TRUE;
 			    $response["error_msg"] = "Ya existe una relacion de tutor entre este tutor y niño";
-			    echo json_encode($response);
+			    echo json_encode($response,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES );
             }
         }
         else{
+            http_response_code(400);
             $response["error"] = TRUE;
 			$response["error_msg"] = "El tutor no existe ";
-			echo json_encode($response);
+			echo json_encode($response,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES );
         }
     }
     else{
+        http_response_code(400);
         $response["error"] = TRUE;
         $response["error_msg"] = "El nino no existe ";
-        echo json_encode($response);
+        echo json_encode($response,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES );
     }
 }
 else{
+     http_response_code(400);
      $response["error"] = TRUE;
      $response["error_msg"] = "variable erroneas";
-     echo json_encode($response);
+     echo json_encode($response,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES );
 }

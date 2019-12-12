@@ -13,31 +13,36 @@ if (isset($_POST['Tutor']) && isset($_POST['Nombre_grupo'])) {
         if(	$db->getTutorById($tutor)!=FALSE){
             $grupo=$db->createGroup($group, $tutor);
             if($grupo!=false){
-                $response["error_msg"]="Creada correctamente";
+                $response["msg"]="Creada correctamente";
                 $response["grupo"] = $grupo;
-                echo json_encode($response);  
+                echo json_encode($response,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES );  
             }
             else{
-            $response["error_msg"]="Error inesperado";
-                echo json_encode($response);  
-            }
+            http_response_code(400);
             $response["error"] = TRUE;
+            $response["error_msg"]="Error inesperado";
+            echo json_encode($response,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES );  
+            }
+            
 	}
 	else{
+        http_response_code(400);
 		$response["error"]=TRUE;
 		$response["error_msg"]="El tutor no existe ";
-		echo json_encode($response);
+		echo json_encode($response,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES );
 	}
 }
 	else{
+        http_response_code(400);
 		$response["error"]=TRUE;
 		$response["error_msg"]="El nombre no esta disponible ";
-		echo json_encode($response);
+		echo json_encode($response,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES );
 	}
 
 } else {
     
     $response["error_msg"] = "faltan campos";
+    http_response_code(400);
     $response["error"] = true;
     echo json_encode($response);
 }

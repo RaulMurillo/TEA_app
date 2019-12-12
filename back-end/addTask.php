@@ -18,15 +18,17 @@ if (isset($_POST['Tini']) && isset($_POST['Tfin']) && isset($_POST['Path_picto']
     $enlace = $_POST['Enlace'];
 
     if (!$db->getNinoById($id_nino)) {
+        http_response_code(400);
         $response["error"] = true;
         $response["error_msg"] = "El niño no existe";
-        echo json_encode($response);
+        echo json_encode($response,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES );
     } else {
         $user_tutor = $db->getTutorById($id_tutor);
         if (!$user_tutor) {
+            http_response_code(400);
             $response["error"] = true;
             $response["error_msg"] = "El tutor no existe";
-            echo json_encode($response);
+            echo json_encode($response,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES );
         } else {
             //existe dia
             if(!$db->collisions($id_dia,$tini,$tfin)){
@@ -34,18 +36,20 @@ if (isset($_POST['Tini']) && isset($_POST['Tfin']) && isset($_POST['Path_picto']
                 if ($task) {
                     $response["error"] = false;
                     $response["task"] = $task;
-                    echo json_encode($response);
+                    echo json_encode($response,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES );
                 }
                 else {
+                    http_response_code(400);
                     $response["error"] = true;
                     $response["error_msg"] = "Error desconocido";
-                    echo json_encode($response);
+                    echo json_encode($response,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES );
                 }
             }
             else{
+                http_response_code(400);
                 $response["error"] = true;
                 $response["error_msg"] = "Existen colisiones colisiones";
-                echo json_encode($response);
+                echo json_encode($response,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES );
 
             }
         }
@@ -54,6 +58,7 @@ if (isset($_POST['Tini']) && isset($_POST['Tfin']) && isset($_POST['Path_picto']
 } else {
     
     $response["error_msg"] = "faltan campos";
+    http_response_code(400);
     $response["error"] = true;
-    echo json_encode($response);
+    echo json_encode($response,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES );
 }
