@@ -179,16 +179,22 @@ class DBFunctions
     {
         $stmt = $this->conn->prepare("SELECT * FROM kid WHERE nick = ?");
         $stmt->bind_param("s", $nick);
+
+        if ($stmt->execute()) {
+            $id = $stmt->get_result()->fetch_assoc();
+            $stmt->close();
+            return $id;
+        } else {
+            return null;
+        }
+    }
+
+    public function getKidIdByNick($nick)
+    {
+        $stmt = $this->conn->prepare("SELECT id_kid FROM kid WHERE nick = ?");
+        $stmt->bind_param("s", $nick);
         $stmt->execute();
         $stmt->store_result();
-
-        if ($stmt->num_rows > 0) {
-            $stmt->close();
-            return true;
-        } else {
-            $stmt->close();
-            return false;
-        }
     }
 
     public function storeNino($nick, $nombre, $apellido, $id_tutor, $birth=null)

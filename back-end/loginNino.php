@@ -30,8 +30,38 @@ if (isset($_POST['ninoId']) && isset($_POST['tutorId'])) {
         $response["error_msg"] = "No tienes acceso a ese perfil";
         echo json_encode($response);
     }
+} elseif (isset($_POST['nick']) && isset($_POST['tutorId'])) {
+    $tutorId = $_POST['tutorId'];
+    $kid_nick = $_POST['nick'];
+    if(!$db->existeNick($nick)){
+        $response["error"] = true;
+        $response["error_msg"] = "Nick incorrecto";
+        echo json_encode($response);
+        exit();
+    }
+
+    $ninoId = $db->getKidIdByNick($kid_nick);
+    if($ninoId == null){
+        $response["error"] = true;
+        $response["error_msg"] = "Error inesperado";
+        echo json_encode($response);
+        exit();
+    }
+
+    $relation = $db->getTutoriaTutorNino($tutorId, $ninoId);
+    if ($relation != null && $relation['state'] == 'ACCEPTED') {
+        $user = $db->getNinoById($ninoId);
+        $response["error"] = false;
+        $response["nino"] = $user;
+        echo json_encode($response);
+
+    } else {
+        $response["error"] = true;
+        $response["error_msg"] = "No tienes acceso a ese perfil";
+        echo json_encode($response);
+    }
 } else {
     $response["error"] = true;
-    $response["error_msg"] = "Son necesarios email y contrasena";
+    $response["error_msg"] = "Parámetros incorrectos";
     echo json_encode($response);
 }
