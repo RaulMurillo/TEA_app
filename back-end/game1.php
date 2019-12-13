@@ -1,7 +1,7 @@
 <?php
 
 header('Access-Control-Allow-Origin: *');
-
+require 'game.php';
 
 
 
@@ -16,16 +16,16 @@ class Identificar_picto extends Game{
     {
         // require_once 'db_function.php';
         // $db = new DBFunctions();
-        $this->$game = array();
-        $this->$N = 5;
-        $this->$imgs = 3;
+        $this->game = array();
+        $this->N = 5;
+        $this->imgs = 3;
     }
-    public function __construct($n)
+/*    public static function withMatches($n)
     {
-        $this->$game = array();
-        $this->$N = $n;
-        $this->$imgs = 3;
-    }
+        $this->game = array();
+        $this->N = $n;
+        $this->imgs = 3;
+    }*/
     public function __destruct()
     {}    
 
@@ -33,30 +33,30 @@ class Identificar_picto extends Game{
         $directorio = 'picts/shared';
         if(is_dir($directorio)){
             // Returns array of files 
-            $fileslist = scandir($directory); 
+            $fileslist = scandir($directorio); 
             
             // Count number of files and store them to variable 
             $num_files = count($fileslist) - 2; 
 
             // Generate N matches
-            for($x = 0; $x < $this->$N; $x++){
+            for($x = 0; $x < $this->N; $x++){
                 // Select random imgs
                 $fileslist = array_slice($fileslist, 2);
-                $pictos = array_rand($fileslist, $this->$imgs);
-
-                for ($j = 0; $j < $this->$imgs; $j++){
-                    $pictos[$j] = $directorio.'/'.$pictos[$j];
+                $pictos = array_rand($fileslist, $this->imgs);
+                $pictos_url = array();
+                for ($j = 0; $j < $this->imgs; $j++){
+                    $pictos_url[$j] = $directorio.'/'.$fileslist[$pictos[$j]];
                 }
 
-                $sol = random_int(0 , $this->$imgs - 1);
-                $sol_name = explode(".", $pictos[$sol])[0]; 
+                $sol = random_int(0 , $this->imgs - 1);
+                $sol_name = explode(".", $fileslist[$pictos[$sol]])[0]; 
                 // Substitute _ by blanks
                 $sol_name = str_replace("_", " ", $sol_name);
 
                 $page['sol'] = $sol;
                 $page['sol_name'] = $sol_name;
-                $page['pictos'] = $pictos;
-                array_push($this->$game, $page);
+                $page['pictos'] = $pictos_url;
+                array_push($this->game, $page);
             }
             
         }
@@ -65,7 +65,7 @@ class Identificar_picto extends Game{
             return null;
         }
 
-        return $this->$game;
+        return $this->game;
     }
         
 }

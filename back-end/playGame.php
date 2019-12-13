@@ -5,17 +5,18 @@ header('Access-Control-Allow-Origin: *');
 // $db = new DBFunctions();
 $response = array("error" => false);
 
-abstract class GamesList extends Enum
+abstract class GamesList //extends Enum
 {
     const Identificar_picto = 99901;
 }
 
 if(isset($_POST['id_game'])){
 
-    $game = GamesList::($_POST['id_game'])
+    //$game = new GamesList($_POST['id_game']);
 
+    $game = ($_POST['id_game']);
     switch ($game) {
-        case Identificar_picto:
+        case 99901:
             
             require 'game1.php';
             $g = new Identificar_picto();
