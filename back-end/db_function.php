@@ -602,16 +602,36 @@ class DBFunctions
         $stmt->bind_param("ss", $id_tutor, $nombre);
 
         if ($stmt->execute()) {
-            // echo "New Tutoria created successfully!\n";
+      
 
             $story = $this->getStory($id_tutor,$nombre);
             $stmt->close();
             return $story;
         } else {
-            // echo "Could not create such record\n";
+           
             return false;
         }
     }
+    public function deleteStory($id_tutor,$id_story)
+    {
+        $stmt = $this->conn->prepare("DELETE FROM story WHERE id_tutor = ? and id_cuento = ?");
+        $stmt->bind_param("ss", $id_tutor, $id_story);
+
+        if ($stmt->execute()) {
+          
+
+           
+            $stmt->close();
+            return true;
+        } else {
+          
+            return false;
+        }
+    }
+
+
+
+
     public function getPages($id_cuento)
     {
         $stmt = $this->conn->prepare("SELECT * FROM pages WHERE id_cuento = ? ORDER BY id_pagina ASC");
