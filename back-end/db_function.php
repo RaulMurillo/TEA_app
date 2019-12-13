@@ -247,7 +247,7 @@ class DBFunctions
 
     public function getTutorKids($tutor)
     {
-        $stmt = $this->conn->prepare("SELECT * FROM tutor_kid_relation WHERE id_tutor = ?");
+        $stmt = $this->conn->prepare("SELECT kid.id_kid, kid.nick, tutor_kid_relation.state FROM tutor_kid_relation INNER JOIN kid on tutor_kid_relation.id_kid=kid.id_kid WHERE id_tutor = ?");
         $stmt->bind_param("s", $tutor);
         if ($stmt->execute()) {
             $grupo = $stmt->get_result()->fetch_all();
@@ -258,9 +258,9 @@ class DBFunctions
         }
     }
 
-    public function getGroupKids($group)
+    public function getGroupKids($group) //kid_group_relation
     {
-        $stmt = $this->conn->prepare("SELECT * FROM kid_group_relation WHERE id_group = ?");
+        $stmt = $this->conn->prepare("SELECT kid.id_kid, kid.nick FROM kid_group_relation INNER JOIN kid on kid_group_relation.id_kid=kid.id_kid WHERE id_group = ?");
         $stmt->bind_param("s", $group);
         if ($stmt->execute()) {
             $grupo = $stmt->get_result()->fetch_all();
@@ -282,6 +282,16 @@ class DBFunctions
             return null;
         }  
     }
+
+    public function delKid($nino)
+    {
+        $stmt = $this->conn->prepare("DELETE FROM kid WHERE id_kid =?");
+        $stmt->bind_param('s', $nino);
+        $result = $stmt->execute();
+        $stmt->close();
+        return $result;
+    }
+
     public function delGroup($group)
     {
         $stmt = $this->conn->prepare("DELETE FROM tea_group WHERE id_group =?");
