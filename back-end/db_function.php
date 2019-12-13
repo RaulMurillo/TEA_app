@@ -179,13 +179,15 @@ class DBFunctions
     {
         $stmt = $this->conn->prepare("SELECT * FROM kid WHERE nick = ?");
         $stmt->bind_param("s", $nick);
+        $stmt->execute();
+        $stmt->store_result();
 
-        if ($stmt->execute()) {
-            $id = $stmt->get_result()->fetch_assoc();
+        if ($stmt->num_rows > 0) {
             $stmt->close();
-            return $id;
+            return true;
         } else {
-            return null;
+            $stmt->close();
+            return false;
         }
     }
 
@@ -195,6 +197,14 @@ class DBFunctions
         $stmt->bind_param("s", $nick);
         $stmt->execute();
         $stmt->store_result();
+        
+        if ($stmt->execute()) {
+            $id = $stmt->get_result()->fetch_assoc();
+            $stmt->close();
+            return $id['id_kid'];
+        } else {
+            return null;
+        }
     }
 
     public function storeNino($nick, $nombre, $apellido, $id_tutor, $birth=null)

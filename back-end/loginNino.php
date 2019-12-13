@@ -23,7 +23,7 @@ if (isset($_POST['ninoId']) && isset($_POST['tutorId'])) {
         //echo json_encode($response);
         $response["error"] = false;
         $response["nino"] = $user;
-        echo json_encode($response);
+        echo json_encode($response,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES );
 
     } else {
         $response["error"] = true;
@@ -33,10 +33,10 @@ if (isset($_POST['ninoId']) && isset($_POST['tutorId'])) {
 } elseif (isset($_POST['nick']) && isset($_POST['tutorId'])) {
     $tutorId = $_POST['tutorId'];
     $kid_nick = $_POST['nick'];
-    if(!$db->existeNick($nick)){
+    if(!$db->existeNick($kid_nick)){
         $response["error"] = true;
         $response["error_msg"] = "Nick incorrecto";
-        echo json_encode($response);
+        echo json_encode($response,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES );
         exit();
     }
 
@@ -44,7 +44,7 @@ if (isset($_POST['ninoId']) && isset($_POST['tutorId'])) {
     if($ninoId == null){
         $response["error"] = true;
         $response["error_msg"] = "Error inesperado";
-        echo json_encode($response);
+        echo json_encode($response,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES );
         exit();
     }
 
@@ -53,15 +53,15 @@ if (isset($_POST['ninoId']) && isset($_POST['tutorId'])) {
         $user = $db->getNinoById($ninoId);
         $response["error"] = false;
         $response["nino"] = $user;
-        echo json_encode($response);
+        echo json_encode($response,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES );
 
     } else {
         $response["error"] = true;
         $response["error_msg"] = "No tienes acceso a ese perfil";
-        echo json_encode($response);
+        echo json_encode($response,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES );
     }
 } else {
     $response["error"] = true;
     $response["error_msg"] = "Parámetros incorrectos";
-    echo json_encode($response);
+    echo json_encode($response,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES );
 }
