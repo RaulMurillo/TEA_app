@@ -4,18 +4,18 @@ require_once 'db_function.php';
 $db = new DBFunctions();
 $response =array ("error"=> FALSE);
 
-if(  isset($_POST['id_kid']) && isset($_POST['id_tutor'])) {
-    $id_kid = $_POST['id_kid'];
+if(  isset($_POST['nick']) && isset($_POST['id_tutor'])) {
+    $kid = $_POST['nick'];
     $id_tutor = $_POST['id_tutor'];
     $estado = "PENDING";
     //comprobamos que exista el niño
-	$user_nino = $db->getNinoById($id_kid);
+	$user_nino = $db->getNinoByNick($kid);
     if($user_nino != FALSE){
         $user_tutor = $db->getTutorById($id_tutor);
 		if($user_tutor != FALSE){
-            $tutoria = $db->getTutoriaTutorNino($id_tutor,$id_kid);
+            $tutoria = $db->getTutoriaTutorNino($id_tutor,$user_nino["id_kid"]);
             if($tutoria == FALSE){
-                $tutoria = $db->createTutoria($id_tutor,$id_kid,$estado);
+                $tutoria = $db->createTutoria($id_tutor,$user_nino["id_kid"],$estado);
                 $response["error"] = FALSE;
                 $response["tutoria"] = $tutoria;
 			    echo json_encode($response,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES );

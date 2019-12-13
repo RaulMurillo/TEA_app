@@ -82,6 +82,17 @@ class DBFunctions
             return null;
         }
     }
+
+    public function getNinoByNick($nick)
+    {
+    $stmt = $this->conn->prepare("SELECT * FROM kid WHERE nick =? ");
+    $stmt->bind_param("s", $nick);
+    $stmt->execute();
+    $user = $stmt->get_result()->fetch_assoc();
+    $stmt->close();
+    return $user;
+    }
+
     public function getTaskById($taskId)
     {
         $stmt = $this->conn->prepare("SELECT * FROM tareas WHERE id_tarea = ? ");
@@ -266,7 +277,15 @@ class DBFunctions
         $stmt = $this->conn->prepare("SELECT kid.id_kid, kid.nick, tutor_kid_relation.state FROM tutor_kid_relation INNER JOIN kid on tutor_kid_relation.id_kid=kid.id_kid WHERE id_tutor = ?");
         $stmt->bind_param("s", $tutor);
         if ($stmt->execute()) {
-            $grupo = $stmt->get_result()->fetch_all();
+            $i=0;
+            $grupo=array();
+            $resultado = $stmt->get_result();
+            while ($row = mysqli_fetch_assoc($resultado)) {
+                $grupo[$i]=$row;
+                $i++;
+            }
+
+            //$grupo = $stmt->get_result()->fetch_all();
             $stmt->close();
             return $grupo;
         } else {
@@ -279,7 +298,14 @@ class DBFunctions
         $stmt = $this->conn->prepare("SELECT kid.id_kid, kid.nick FROM kid_group_relation INNER JOIN kid on kid_group_relation.id_kid=kid.id_kid WHERE id_group = ?");
         $stmt->bind_param("s", $group);
         if ($stmt->execute()) {
-            $grupo = $stmt->get_result()->fetch_all();
+            $i=0;
+            $grupo=array();
+            $resultado = $stmt->get_result();
+            while ($row = mysqli_fetch_assoc($resultado)) {
+                $grupo[$i]=$row;
+                $i++;
+            }
+            //$grupo = $stmt->get_result()->fetch_all();
             $stmt->close();
             return $grupo;
         } else {
@@ -357,7 +383,14 @@ class DBFunctions
         $stmt = $this->conn->prepare("SELECT * FROM kid_group_relation WHERE  id_kid = ?");
         $stmt->bind_param("s",$id_kid);
         if ($stmt->execute()) {
-            $grupo = $stmt->get_result()->fetch_all();
+            $i=0;
+            $grupo=array();
+            $resultado = $stmt->get_result();
+            while ($row = mysqli_fetch_assoc($resultado)) {
+                $grupo[$i]=$row;
+                $i++;
+            }
+            //$grupo = $stmt->get_result()->fetch_all();
             $stmt->close();
             return $grupo;
         } else {
@@ -369,7 +402,14 @@ class DBFunctions
         $stmt = $this->conn->prepare("SELECT * FROM tea_group WHERE  id_tutor = ?");
         $stmt->bind_param("s",$tutor);
         if ($stmt->execute()) {
-            $grupo = $stmt->get_result()->fetch_all();
+            $i=0;
+            $grupo=array();
+            $resultado = $stmt->get_result();
+            while ($row = mysqli_fetch_assoc($resultado)) {
+                $grupo[$i]=$row;
+                $i++;
+            }
+            //$grupo = $stmt->get_result()->fetch_all();
             $stmt->close();
             return $grupo;
         } else {
@@ -430,7 +470,14 @@ class DBFunctions
         $stmt = $this->conn->prepare("SELECT * FROM tareas WHERE  id_nino = ? and dia = ?");
         $stmt->bind_param("ss",$id_nino,$dia);
         if ($stmt->execute()) {
-            $tareas = $stmt->get_result()->fetch_all();
+            $i=0;
+            $tareas=array();
+            $resultado = $stmt->get_result();
+            while ($row = mysqli_fetch_assoc($resultado)) {
+                $tareas[$i]=$row;
+                $i++;
+            }
+            //$tareas = $stmt->get_result()->fetch_all();
             $stmt->close();
             return $tareas;
         } else {
@@ -455,7 +502,14 @@ class DBFunctions
         $stmt = $this->conn->prepare("SELECT * FROM subtareas WHERE  id_tarea = ? ORDER BY orden ASC");
         $stmt->bind_param("s",$tarea);
         if ($stmt->execute()) {
-            $tareas = $stmt->get_result()->fetch_all();
+            $i=0;
+            $tareas=array();
+            $resultado = $stmt->get_result();
+            while ($row = mysqli_fetch_assoc($resultado)) {
+                $tareas[$i]=$row;
+                $i++;
+            }
+            //$tareas = $stmt->get_result()->fetch_all();
             $stmt->close();
             return $tareas;
         } else {
@@ -478,7 +532,14 @@ class DBFunctions
             $stmt = $this->conn->prepare("SELECT * FROM subtareas WHERE id_tarea =? ");
             $stmt->bind_param("s", $task);
             $stmt->execute();
-            $user = $stmt->get_result()->fetch_all();
+            $i=0;
+            $stareas=array();
+            $resultado = $stmt->get_result();
+            while ($row = mysqli_fetch_assoc($resultado)) {
+                $stareas[$i]=$row;
+                $i++;
+            }
+            //$user = $stmt->get_result()->fetch_all();
             $stmt->close();
             return $user;
         } else {
