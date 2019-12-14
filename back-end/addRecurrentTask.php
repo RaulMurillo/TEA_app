@@ -25,6 +25,7 @@ $id_nino = $_POST['Nino'];
 $text = $_POST['Text'];
 $tipo = $_POST['Tipo'];
 $enlace = $_POST['Enlace'];
+$periodo = $_POST['Periodo'];
 
 // Comprobar la existencia del niño
 if (!$db->getNinoById($id_nino)) {
@@ -60,7 +61,10 @@ if ($db->comprobarColisionesTareaRecurrente($id_nino, $id_dia, $tini, $tfin)) {
     die;
 }
 
-$task = $db->storeTask($tini, $tfin, $path_picto, $id_tutor, $id_nino, $text, $id_dia, $tipo, $enlace);
+$task = $db->storeRecurrentTask(
+    $tini, $tfin, $path_picto, $id_tutor, $id_nino, $text, $id_dia, $tipo, $enlace, $periodo
+);
+
 if (!$task) {
     http_response_code(400);
     $response = [

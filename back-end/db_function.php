@@ -361,6 +361,35 @@ class DBFunctions
         }
     }
 
+    public function storeRecurrentTask($tini, $tfin, $path_picto, $id_tutor, $id_nino, $text, $id_dia, $tipo, $enlace, $periodo)
+    {
+        $tstamp = date('Y-m-d H:i:s');
+        $sql = <<<SQL
+INSERT INTO subtareas
+    (hora_inicio, hora_fin, id_nino, id_tutor, texto, path_picto, t_stamp, dia, tipo, enlace, periodo)
+    Values (?,?,?,?,?,?,?,?,?,?,?)
+SQL;
+        
+        $stmt->bind_param(
+            "sssssssssss",
+            $tini,
+            $tfin,
+            $id_nino,
+            $id_tutor,
+            $text,
+            $path_picto,
+            $tstamp,
+            $id_dia,
+            $tipo,
+            $enlace,
+            $periodo
+        );
+
+        $result = $stmt->execute();
+        $stmt->close();
+        return $result;
+    }
+
     public function storeTask( $tini,$tfin,$path_picto,$id_tutor,$id_nino,$text,$id_dia,$tipo,$enlace)
     {
         $tstam= date('Y-m-d H:i:s');
@@ -519,6 +548,31 @@ class DBFunctions
         return $hash;
     }
 
+    public function comprobarColisionesTareaRecurrente(string $idNino, string $dia, string $tini, string $tfin): bool
+    {
+        $sql = <<<SQL
+SELECT count(id_subtarea)
+FROM subtareas
+WHERE 
+    hora_inicio <= ?
+    AND hora_fin >= ?
+    AND id_nino = ?
+    AND (
+        periodo = 'dia'
+        OR (periodo = 'semana' AND DATEDIFF(?, dia) % 7 = 0)
+        OR (
+            (periodo = 'mes' OR periodo = 'anyo') AND DAY(dia) = DAY(?)
+        )
+    )
+SQL;
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("sss",$tfin, $tini, $idNino, $dia, $dia);
+        $stmt->execute();
+        $stmt->store_result();
+        $result = $stmt->get_result()->fetch_row()[0];
+        $stmt->close();
+        return $result > 0;
+    }
 
 //colisiones en proceso
     public function collisions($dia,$tini,$tfin){
