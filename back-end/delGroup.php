@@ -10,8 +10,7 @@ if(  isset($_POST['id_group']) && isset($_POST['Tutor'])) {
 	if($user_tutor != FALSE){
 		$aux=$db->getGroup($group);
 		if(	$aux!=FALSE && $aux["id_tutor"] ==$id_tutor ){
-			$grupo=$db->getGroupKids($group);
-			if($grupo==false || count($grupo)== 0){
+
 			if($db->delGroup($group))		
 				$response["msg"]="Eliminada correctamente";
 			else{
@@ -20,14 +19,7 @@ if(  isset($_POST['id_group']) && isset($_POST['Tutor'])) {
 				$response["error"] = TRUE;
 				}
 				echo json_encode($response,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES );
-		}
-		else{
-			http_response_code(400);
-			$response["error"]=TRUE;
-			$response["error_msg"]="El grupo no esta vacio ";
-			$response["grupo"]=$grupo;
-			echo json_encode($response,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES );
-		}
+		
 	}
 		else{
 			http_response_code(400);
