@@ -3,8 +3,8 @@ header('Access-Control-Allow-Origin: *');
 require_once 'db_function.php';
 $db = new DBFunctions();
 $response =array ("error"=>FALSE);
-if(  isset($_POST['Id_group']) && isset($_POST['Tutor'])) {
-	$group =$_POST['Id_group'];
+if(  isset($_POST['id_group']) && isset($_POST['Tutor'])) {
+	$group =$_POST['id_group'];
 	$id_tutor =$_POST['Tutor'];
 	$user_tutor = $db->getTutorById($id_tutor);
 	if($user_tutor != FALSE){

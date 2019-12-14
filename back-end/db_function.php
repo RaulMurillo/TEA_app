@@ -119,6 +119,24 @@ class DBFunctions
             return null;
         }
     }
+    public function getTutorias($tutorId)
+    {
+        $stmt = $this->conn->prepare("SELECT tutor_kid_relation.id_tutor, tutor.nombre,tutor_kid_relation.id_kid, kid.nombre FROM tutor_kid_relation INNER JOIN kid on tutor_kid_relation.id_kid=kid.id_kid LEFT OUTER JOIN tutor  on tutor.id_tutor = tutor_kid_relation.id_tutor WHERE kid.id_main_tutor = ? and tutor_kid_relation.state = 'PENDING' ");
+        $stmt->bind_param("s", $tutorId);
+        $i=0;
+        if ($stmt->execute()) {
+            $resultado = $stmt->get_result();
+            while ($row = mysqli_fetch_assoc($resultado)) {
+                $tutorias[$i]=$row;
+                $i++;
+            }
+
+            $stmt->close();
+            return $tutorias;
+        } else {
+            return null;
+        }
+    }
     public function createTutoria($tutorId, $ninoId,$estado)
     {
         $stmt = $this->conn->prepare("INSERT INTO tutor_kid_relation(id_tutor, id_kid,state) Values (?,?,?)");
@@ -144,6 +162,7 @@ class DBFunctions
             // echo "State changed successfully!\n";
 
             $tutoria = $this->getTutoriaTutorNino($tutorId,$ninoId);
+        
             $stmt->close();
             return $tutoria;
         } else {

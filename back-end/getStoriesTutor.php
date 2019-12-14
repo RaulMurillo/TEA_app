@@ -19,7 +19,7 @@ if(isset($_POST['id_tutor']))
 	  	
         http_response_code(200);
         $response["error"] = false;
-        $response["pages"] = $aux;
+        $response["stories"] = $aux;
         echo json_encode($response,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES );
     }
     else
