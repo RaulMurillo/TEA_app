@@ -560,7 +560,7 @@ class DBFunctions
             }
             //$user = $stmt->get_result()->fetch_all();
             $stmt->close();
-            return $user;
+            return $stareas;
         } else {
             // echo "Could not create such record\n";
             return false;
