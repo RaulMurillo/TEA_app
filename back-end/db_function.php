@@ -162,7 +162,7 @@ class DBFunctions
             // echo "State changed successfully!\n";
 
             $tutoria = $this->getTutoriaTutorNino($tutorId,$ninoId);
-        
+
             $stmt->close();
             return $tutoria;
         } else {
@@ -227,7 +227,7 @@ class DBFunctions
         $stmt->bind_param("s", $nick);
         $stmt->execute();
         $stmt->store_result();
-        
+
         if ($stmt->execute()) {
             $id = $stmt->get_result()->fetch_assoc();
             $stmt->close();
@@ -263,7 +263,7 @@ class DBFunctions
     }
     public function getGroupbyName($group)
     {
-        
+
         $stmt = $this->conn->prepare("SELECT * FROM tea_group WHERE nombre = ?");
         $stmt->bind_param("s", $group);
         if ($stmt->execute()) {
@@ -341,7 +341,7 @@ class DBFunctions
             return $grupo;
         } else {
             return null;
-        }  
+        }
     }
 
     public function delKid($nino)
@@ -361,7 +361,7 @@ class DBFunctions
         $stmt->close();
         return $result;
     }
-    public function getGroupKidGrupo($id_kid,$id_group) 
+    public function getGroupKidGrupo($id_kid,$id_group)
     {
         $stmt = $this->conn->prepare("SELECT * FROM kid_group_relation WHERE id_group = ? and id_kid = ?");
         $stmt->bind_param("ss", $id_group,$id_kid);
@@ -440,11 +440,13 @@ class DBFunctions
     {
         $tstamp = date('Y-m-d H:i:s');
         $sql = <<<SQL
-INSERT INTO subtareas
+INSERT INTO tareasrec
     (hora_inicio, hora_fin, id_nino, id_tutor, texto, path_picto, t_stamp, dia, tipo, enlace, periodo)
     Values (?,?,?,?,?,?,?,?,?,?,?)
 SQL;
-        
+
+        $stmt = $this->conn->prepare($sql);
+
         $stmt->bind_param(
             "sssssssssss",
             $tini,
@@ -531,7 +533,7 @@ SQL;
         } else {
             return null;
         }
-    
+
     }
     public function getSubTaskbyId($subtask)
     {
@@ -563,7 +565,7 @@ SQL;
         } else {
             return null;
         }
-    
+
     }
 
 
@@ -646,10 +648,10 @@ SQL;
 
     public function comprobarColisionesTareaRecurrente(string $idNino, string $dia, string $tini, string $tfin): bool
     {
-        $sql = <<<SQL
-SELECT count(id_subtarea)
-FROM subtareas
-WHERE 
+        $sql =
+"SELECT count(id_tarearec) as tareas
+FROM tareasrec
+WHERE
     hora_inicio <= ?
     AND hora_fin >= ?
     AND id_nino = ?
@@ -659,12 +661,10 @@ WHERE
         OR (
             (periodo = 'mes' OR periodo = 'anyo') AND DAY(dia) = DAY(?)
         )
-    )
-SQL;
+    )";
         $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("sss",$tfin, $tini, $idNino, $dia, $dia);
+        $stmt->bind_param("sssss",$tfin, $tini, $idNino, $dia, $dia);
         $stmt->execute();
-        $stmt->store_result();
         $result = $stmt->get_result()->fetch_row()[0];
         $stmt->close();
         return $result > 0;
@@ -673,8 +673,8 @@ SQL;
 //colisiones en proceso
     public function collisions($dia,$tini,$tfin){
         $stmt = $this->conn->prepare("SELECT * FROM tareas WHERE ( ( hora_inicio <= ? and ?<= hora_fin ) or
-                                         ( ? <= hora_fin and hora_fin <= ? ) or 
-                                         ( hora_inicio <= ? and  ? <= hora_fin ) or ( ? <= hora_inicio and hora_fin <= ?) ) 
+                                         ( ? <= hora_fin and hora_fin <= ? ) or
+                                         ( hora_inicio <= ? and  ? <= hora_fin ) or ( ? <= hora_inicio and hora_fin <= ?) )
                                          and dia = ?");
         $stmt->bind_param("sssssssss",$tfin,$tfin,$tini,$tfin,$tini,$tfin,$tini,$tfin,$dia);
         $stmt->execute();
@@ -692,13 +692,13 @@ SQL;
 
     public function collisionsUpdate($dia,$tini,$tfin,$id_tarea){
         $stmt = $this->conn->prepare("SELECT * FROM tareas WHERE ( ( hora_inicio <= ? and ?<= hora_fin ) or
-        ( ? <= hora_fin and hora_fin <= ? ) or 
-        ( hora_inicio <= ? and  ? <= hora_fin ) or ( ? <= hora_inicio and hora_fin <= ?) ) 
+        ( ? <= hora_fin and hora_fin <= ? ) or
+        ( hora_inicio <= ? and  ? <= hora_fin ) or ( ? <= hora_inicio and hora_fin <= ?) )
                                             and dia = ? and id_tarea != ?");
         $stmt->bind_param("ssssssssss",$tfin,$tfin,$tini,$tfin,$tini,$tfin,$tini,$tfin,$dia,$id_tarea);
         $stmt->execute();
         $stmt->store_result();
-        
+
 
         if ($stmt->num_rows > 0) {
             $stmt->close();
@@ -752,13 +752,13 @@ SQL;
         $stmt->bind_param("ss", $id_tutor, $nombre);
 
         if ($stmt->execute()) {
-      
+
 
             $story = $this->getStory($id_tutor,$nombre);
             $stmt->close();
             return $story;
         } else {
-           
+
             return false;
         }
     }
@@ -768,13 +768,13 @@ SQL;
         $stmt->bind_param("ss", $id_tutor, $id_story);
 
         if ($stmt->execute()) {
-          
 
-           
+
+
             $stmt->close();
             return true;
         } else {
-          
+
             return false;
         }
     }
