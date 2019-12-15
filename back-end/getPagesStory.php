@@ -22,7 +22,7 @@ if(isset($_POST['id_cuento']))
 	  	
         http_response_code(200);
         $response["error"] = false;
-        $response["stories"] = $aux;
+        $response["pages"] = $aux;
         echo json_encode($response,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES );
     }
     else
